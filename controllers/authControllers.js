@@ -32,6 +32,21 @@ const signup = async (req, res) => {
     });
 };
 
+const verify = async (req, res) => {
+    const { verificationToken } = req.params;
+    const user = await authServices.findUser({ verificationToken });
+    if (!user) {
+        throw HttpError(404, 'Email not found or already verified');
+    }
+
+    await authServices.updateUser({ _id: user._id }, { verify: true, verificationToken: null });
+
+    res.json({
+        message: 'Verification successful',
+    });
+};
+
 export default {
     signup: ctrlWrapper(signup),
+    verify: ctrlWrapper(verify),
 };
