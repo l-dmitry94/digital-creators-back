@@ -1,5 +1,4 @@
 import { Schema, model } from 'mongoose';
-
 import { handleServerError, setUpdateSettings } from './hooks.js';
 import { usernameRegexp, emailRegexp } from '../constants/userConstants.js';
 
@@ -24,19 +23,19 @@ const userSchema = new Schema(
             type: String,
             require: true,
         },
-        // token: {
-        //     type: String,
-        //     default: null,
-        // },
-        // verify: {
-        //     type: Boolean,
-        //     default: false,
-        // },
-        // verificationToken: {
-        //     type: String,
-        //     default: null,
-        //     // required: [true, 'Verify code is required'],
-        // },
+        token: {
+            type: String,
+            default: null,
+        },
+        verify: {
+            type: Boolean,
+            default: false,
+        },
+        verificationToken: {
+            type: String,
+            default: null,
+            // required: [true, 'Verify code is required'],
+        },
     },
     { versionKey: false, timestamps: true }
 );
