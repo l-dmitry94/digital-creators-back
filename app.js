@@ -4,6 +4,8 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import 'dotenv/config.js';
 
+import authRouter from './routes/authRouter.js';
+
 const { DB_HOST, PORT } = process.env;
 
 const app = express();
@@ -12,6 +14,8 @@ app.use(morgan('tiny'));
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
+
+app.use('/api/auth', authRouter);
 
 app.use((_, res) => {
     res.status(404).json({ message: 'Route not found' });
@@ -31,7 +35,7 @@ mongoose
             console.log(`Server is running. Use our API on port: ${PORT}`);
         });
     })
-    .catch((error) => {
+    .catch(error => {
         console.error(error.message);
         process.exit(1);
     });
