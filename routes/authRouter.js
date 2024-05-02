@@ -17,8 +17,8 @@ authRouter.post('/signin', validateBody(userSigninSchema), authControllers.signi
 
 authRouter.patch('/avatars', authenticate, upload.single('avatar'), authControllers.updateAvatar);
 
-// authRouter.get('/current', authenticate, authControllers.getCurrent);
+authRouter.get('/current', authenticate, authControllers.getCurrent);
 
-// authRouter.post('/logout', authenticate, authControllers.logout);
+authRouter.post('/logout', authenticate, authControllers.logout);
 
 export default authRouter;

@@ -85,9 +85,9 @@ const signin = async (req, res) => {
     res.json({
         token,
         user: {
+            username: user.username,
             email: user.email,
             avatarURL: user.avatarURL,
-            subscription: user.subscription,
         },
     });
 };
@@ -119,10 +119,29 @@ const updateAvatar = async (req, res) => {
     });
 };
 
+const getCurrent = async (req, res) => {
+    const { username, email, avatarURL } = req.user;
+    res.json({
+        user: {
+            username,
+            email,
+            avatarURL,
+        },
+    });
+};
+
+const logout = async (req, res) => {
+    const { _id } = req.user;
+    await authServices.updateUser({ _id }, { token: null });
+    res.status(204).send();
+};
+
 export default {
     signup: ctrlWrapper(signup),
     verify: ctrlWrapper(verify),
     resendVerify: ctrlWrapper(resendVerify),
     signin: ctrlWrapper(signin),
     updateAvatar: ctrlWrapper(updateAvatar),
+    getCurrent: ctrlWrapper(getCurrent),
+    logout: ctrlWrapper(logout),
 };
