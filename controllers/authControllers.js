@@ -11,7 +11,7 @@ import HttpError from '../helpers/HttpError.js';
 import createVerifyEmail from '../helpers/createVerifyEmail.js';
 import sendEmail from '../helpers/sendMail.js';
 
-const { JWT_SECRET } = process.env;
+const { SECRET_KEY } = process.env;
 
 const signup = async (req, res) => {
     const { email, password } = req.body;
@@ -78,7 +78,7 @@ const signin = async (req, res) => {
 
     const { _id: id } = user;
     const payload = { id };
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '12h' });
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '12h' });
     await authServices.updateUser({ _id: id }, { token });
 
     res.json({
