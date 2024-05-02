@@ -3,6 +3,7 @@ import authControllers from '../controllers/authControllers.js';
 import { userSignupSchema, userSigninSchema, userEmailSchema } from '../schemas/usersSchemas.js';
 import validateBody from '../decorators/validateBody.js';
 import authenticate from '../middlewares/authenticate.js';
+import upload from '../middlewares/upload.js';
 
 const authRouter = express.Router();
 
@@ -10,11 +11,11 @@ authRouter.post('/signup', validateBody(userSignupSchema), authControllers.signu
 
 authRouter.get('/verify/:verificationToken', authControllers.verify);
 
-// authRouter.post('/verify', validateBody(userEmailSchema), authControllers.resendVerify);
+authRouter.post('/verify', validateBody(userEmailSchema), authControllers.resendVerify);
 
-// authRouter.post('/login', validateBody(userSigninSchema), authControllers.singin);
+authRouter.post('/signin', validateBody(userSigninSchema), authControllers.signin);
 
-// authRouter.patch('/avatars', authenticate, upload.single('avatar'), authControllers.updateAvatar);
+authRouter.patch('/avatars', authenticate, upload.single('avatar'), authControllers.updateAvatar);
 
 // authRouter.get('/current', authenticate, authControllers.getCurrent);
 
