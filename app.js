@@ -3,7 +3,9 @@ import morgan from 'morgan';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import 'dotenv/config.js';
+import authRouter from './routes/authRouter.js';
 import supportRouter from './routes/supportRouter.js';
+
 const { DB_HOST, PORT } = process.env;
 
 const app = express();
@@ -13,7 +15,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-app.use("/api/support", supportRouter);
+app.use('/api/auth', authRouter);
+
+app.use('/api/support', supportRouter);
 
 app.use((_, res) => {
     res.status(404).json({ message: 'Route not found' });
