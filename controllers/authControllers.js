@@ -10,7 +10,6 @@ import ctrlWrapper from '../decorators/ctrlWrapper.js';
 import HttpError from '../helpers/HttpError.js';
 import createVerifyEmail from '../helpers/createVerifyEmail.js';
 import sendEmail from '../helpers/sendMail.js';
-import User from '../models/User.js';
 
 const { JWT_SECRET } = process.env;
 
@@ -136,6 +135,40 @@ const logout = async (req, res) => {
     res.status(204).send();
 };
 
+const supportSendEmail = async (req, res) => {
+    const { email,value } = req.body;
+
+    const supportEmail = "orellesha9@gmail.com"
+    console.log(req.body);
+    // const user = await authServices.findUser({ email });
+    // if (!user) {
+    //   throw HttpError(404, "Email not found");
+    // }
+
+    // if (user.verify) {
+    //   throw HttpError(400, "Verification has already been passed");
+    // }
+
+    const sendUserEmail = {
+        to: email,
+        subject: 'Technical support',
+        html: `<p>We have received your request for help, expect our expert to contact you soon<p>`,
+    };
+    const sendSupportEmail = {
+      to: supportEmail,
+      subject: 'Need help',
+      html: `<p>${value}<p>
+      <p>User email: ${email}<p>`
+  };
+
+  await sendEmail(sendUserEmail)
+  await sendEmail(sendSupportEmail)
+  
+    res.json({
+        message: 'Email sent',
+    });
+};
+
 export default {
     signup: ctrlWrapper(signup),
     verify: ctrlWrapper(verify),
@@ -144,4 +177,7 @@ export default {
     updateAvatar: ctrlWrapper(updateAvatar),
     getCurrent: ctrlWrapper(getCurrent),
     logout: ctrlWrapper(logout),
-};
+    supportSendEmail: ctrlWrapper(supportSendEmail),
+}    
+
+
