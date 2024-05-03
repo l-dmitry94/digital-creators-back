@@ -6,6 +6,8 @@ import 'dotenv/config.js';
 import swagerUi from 'swagger-ui-express';
 import path from 'path';
 
+import authRouter from './routes/authRouter.js';
+import supportRouter from './routes/supportRouter.js';
 
 const { DB_HOST, PORT } = process.env;
 
@@ -20,6 +22,10 @@ app.use(express.json());
 app.use(express.static('public'));
 app.use('/api-docs', swagerUi.serve, swagerUi.setup(swaggerDocument));
 console.log(swaggerDocument)
+
+app.use('/api/auth', authRouter);
+
+app.use('/api/support', supportRouter);
 
 app.use((_, res) => {
     res.status(404).json({ message: 'Route not found' });
@@ -39,7 +45,7 @@ mongoose
             console.log(`Server is running. Use our API on port: ${PORT}`);
         });
     })
-    .catch((error) => {
+    .catch(error => {
         console.error(error.message);
         process.exit(1);
     });
