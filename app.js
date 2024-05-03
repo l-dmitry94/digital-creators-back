@@ -3,8 +3,14 @@ import morgan from 'morgan';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import 'dotenv/config.js';
+import swagerUi from 'swagger-ui-express';
+import path from 'path';
+
 
 const { DB_HOST, PORT } = process.env;
+
+const swaggerDocument = path.resolve('swagger.json');
+
 
 const app = express();
 
@@ -12,6 +18,8 @@ app.use(morgan('tiny'));
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
+app.use('/api-docs', swagerUi.serve, swagerUi.setup(swaggerDocument));
+console.log(swaggerDocument)
 
 app.use((_, res) => {
     res.status(404).json({ message: 'Route not found' });
