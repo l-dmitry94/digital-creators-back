@@ -4,6 +4,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import 'dotenv/config.js';
 import supportRouter from './routes/supportRouter.js';
+import uploadsRouter from './routes/uploadsRouter.js';
 const { DB_HOST, PORT } = process.env;
 
 const app = express();
@@ -13,7 +14,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-app.use("/api/support", supportRouter);
+app.use('/api/support', supportRouter);
+app.use('/api/user', uploadsRouter);
 
 app.use((_, res) => {
     res.status(404).json({ message: 'Route not found' });
