@@ -7,15 +7,10 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerDocumention from './swagger.json' with { type: 'json' };
 
 
-import path from 'path';
-
 import authRouter from './routes/authRouter.js';
 import supportRouter from './routes/supportRouter.js';
 
 const { DB_HOST, PORT } = process.env;
-
-
-
 
 const app = express();
 
