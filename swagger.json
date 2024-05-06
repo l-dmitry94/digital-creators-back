@@ -1,0 +1,465 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "version": "1.0.0",
+        "title": "Swagger Test",
+        "description": "Showing off swagger-ui-express",
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "servers": [{ "url": "http://localhost:3000/api" }, { "url": "https://digital-creators-back.onrender.com/api" }],
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Authorization endpoints"
+        },
+        {
+            "name": "Support",
+            "description": "Sending email for supporting"
+        }
+    ],
+    "paths": {
+        "/auth/signup": {
+            "post": {
+                "tags": ["Auth"],
+                "summary": "User Signup",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegistrationRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User signed up successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegistrationResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request (invalid request body)",
+                        "content": {}
+                    },
+                    "409": {
+                        "description": "Email in use"
+                    }
+                }
+            }
+        },
+        "/auth/verify/{verificationToken}": {
+            "get": {
+                "tags": ["Auth"],
+                "summary": "Verify User Account",
+                "parameters": [
+                    {
+                        "name": "verificationToken",
+                        "in": "path",
+                        "description": "Verification token received via email",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Verification successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Verification successful"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Email not found or already verified",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Email not found or already verified"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+        "/auth/verify": {
+            "post": {
+                "tags": ["Auth"],
+                "summary": "Resend Verification Email",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VerifyRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Verification email sent"
+                    },
+                    "404": {
+                        "description": "Email not found"
+                    },
+                    "400": {
+                        "description": "Verification has already been passed"
+                    }
+                }
+            }
+        },
+        "/auth/signin": {
+            "post": {
+                "tags": ["Auth"],
+                "summary": "User Signin",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User signed up successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errorType": {
+                                            "type": "string",
+                                            "enum": ["invalidCredentials", "emailNotVerified"]
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "invalidCredentials": {
+                                        "value": {
+                                            "errorType": "invalidCredentials",
+                                            "message": "Email or password is wrong"
+                                        }
+                                    },
+                                    "emailNotVerified": {
+                                        "value": {
+                                            "errorType": "emailNotVerified",
+                                            "message": "Email not verified"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request (invalid request body)",
+                        "content": {}
+                    },
+                    "409": {
+                        "description": "Email in use"
+                    }
+                }
+            }
+        },
+        "/auth/avatars": {
+            "patch": {
+                "tags": ["Auth"],
+                "summary": "Update User Avatar",
+                "parameters": [],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "avatar": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User avatar updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "avatarURL": {
+                                            "type": "string",
+                                            "description": "URL of the updated user avatar",
+                                            "example": "//www.gravatar.com/avatar/412dcbc34b007af7ab075bfaa26c98f0"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "An avatar file was not added to your request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "401": {
+                        "description": "Not authorized"
+                    }
+                }
+            }
+        },
+
+        "/auth/current": {
+            "get": {
+                "tags": ["Auth"],
+                "summary": "Get Current User",
+                "parameters": [],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegistrationResponse"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Retrieve current user's information",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegistrationResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Not authorized"
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": ["Auth"],
+                "summary": "Logout User",
+                "parameters": [],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "_id": {
+                                        "type": "string",
+                                        "description": "User ID",
+                                        "example": "123456789"
+                                    }
+                                },
+                                "required": ["_id"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "User logged out successfully"
+                    },
+                    "401": {
+                        "description": "Not authorized"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+          "RegistrationRequest": {
+            "type": "object",
+            "properties": {
+              "username": {
+                "type": "string",
+                "description": "User's username"
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              },
+              "password": {
+                "type": "string",
+                "description": "User's password",
+                "example": "qwerty123"
+              }
+            },
+            "required": ["username", "email", "password"]
+          },
+            "RegistrationResponse": {
+                "type": "object",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "user": {
+                            "username": {
+                                "type": "string",
+                                "description": "User's username"
+                            },
+                            "email": {
+                                "type": "string",
+                                "description": "User's email",
+                                "format": "email"
+                            },
+                            "avatarURL": {
+                                "type": "string",
+                                "description": "User's avatar",
+                                "example": "//www.gravatar.com/avatar/412dcbc34b007af7ab075bfaa26c98f0"
+                            }
+                        }
+                    }
+                },
+                "example": {
+                    "user": {
+                        "username": "Ivan",
+                        "email": "vegrke@gufum.com",
+                        "avatarURL": "//www.gravatar.com/avatar/412dcbc34b007af7ab075bfaa26c98f0"
+                    }
+                }
+            },
+            "LoginRequest": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "User's email",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "User's password",
+                        "example": "qwerty123"
+                    }
+                }
+            },
+            "LoginResponse": {
+                "type": "object",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "token": {
+                            "type": "string",
+                            "description": "User's token"
+                        },
+                        "user": {
+                            "username": {
+                                "type": "string",
+                                "description": "User's username"
+                            },
+                            "email": {
+                                "type": "string",
+                                "description": "User's email",
+                                "format": "email"
+                            },
+                            "avatarURL": {
+                                "type": "string",
+                                "description": "User's avatar",
+                                "example": "//www.gravatar.com/avatar/412dcbc34b007af7ab075bfaa26c98f0"
+                            }
+                        }
+                    }
+                },
+                "example": {
+                    "token": {},
+                    "user": {
+                        "username": "Ivan",
+                        "email": "vegrke@gufum.com",
+                        "avatarURL": "//www.gravatar.com/avatar/412dcbc34b007af7ab075bfaa26c98f0"
+                    }
+                }
+            },
+            "VerifyRequest": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "User's email",
+                        "format": "email"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}
