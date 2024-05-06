@@ -9,7 +9,7 @@
             "url": "https://opensource.org/licenses/MIT"
         }
     },
-    "servers": [{ "url": "http://localhost:3000" }, { "url": "https://digital-creators-back.onrender.com/api" }],
+    "servers": [{ "url": "http://localhost:3000/api" }, { "url": "https://digital-creators-back.onrender.com/api" }],
     "tags": [
         {
             "name": "Auth",
@@ -21,7 +21,7 @@
         }
     ],
     "paths": {
-        "/api/auth/signup": {
+        "/auth/signup": {
             "post": {
                 "tags": ["Auth"],
                 "summary": "User Signup",
@@ -57,7 +57,7 @@
                 }
             }
         },
-        "/api/auth/verify/{verificationToken}": {
+        "/auth/verify/{verificationToken}": {
             "get": {
                 "tags": ["Auth"],
                 "summary": "Verify User Account",
@@ -109,7 +109,7 @@
             }
         },
 
-        "/api/auth/verify": {
+        "/auth/verify": {
             "post": {
                 "tags": ["Auth"],
                 "summary": "Resend Verification Email",
@@ -136,7 +136,7 @@
                 }
             }
         },
-        "/api/auth/signin": {
+        "/auth/signin": {
             "post": {
                 "tags": ["Auth"],
                 "summary": "User Signin",
@@ -205,14 +205,14 @@
                 }
             }
         },
-        "/api/auth/avatars": {
+        "/auth/avatars": {
             "patch": {
                 "tags": ["Auth"],
                 "summary": "Update User Avatar",
                 "parameters": [],
                 "security": [
                     {
-                        "Bearer": []
+                        "BearerAuth": []
                     }
                 ],
                 "requestBody": {
@@ -262,14 +262,14 @@
             }
         },
 
-        "/api/auth/current": {
+        "/auth/current": {
             "get": {
                 "tags": ["Auth"],
                 "summary": "Get Current User",
                 "parameters": [],
                 "security": [
                     {
-                        "Bearer": []
+                        "BearerAuth": []
                     }
                 ],
                 "requestBody": {
@@ -299,14 +299,14 @@
                 }
             }
         },
-        "/api/auth/logout": {
+        "/auth/logout": {
             "post": {
                 "tags": ["Auth"],
                 "summary": "Logout User",
                 "parameters": [],
                 "security": [
                     {
-                        "Bearer": []
+                        "BearerAuth": []
                     }
                 ],
                 "requestBody": {
@@ -452,13 +452,13 @@
                         "format": "email"
                     }
                 }
-            },
-            "securitySchemes": {
-                "BearerAuth": {
-                    "type": "http",
-                    "scheme": "bearer",
-                    "bearerFormat": "JWT"
-                }
+            }
+        },
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
             }
         }
     }
