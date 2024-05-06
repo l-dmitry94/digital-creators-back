@@ -124,12 +124,11 @@ const updateAvatar = async (req, res) => {
 };
 
 const getCurrent = async (req, res) => {
-    const { username, email, avatarURL } = req.user;
+    const { username, email } = req.user;
     res.json({
         user: {
             username,
             email,
-            avatarURL,
         },
     });
 };
