@@ -3,6 +3,10 @@ import morgan from 'morgan';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import 'dotenv/config.js';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocumention from './swagger.json' with { type: 'json' };
+
+
 import authRouter from './routes/authRouter.js';
 import supportRouter from './routes/supportRouter.js';
 import uploadsRouter from './routes/uploadsRouter.js';
@@ -15,6 +19,8 @@ app.use(morgan('tiny'));
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocumention));
+
 
 
 app.use('/api/user', uploadsRouter);
