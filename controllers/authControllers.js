@@ -98,10 +98,9 @@ const signin = async (req, res) => {
 
 // const avatarsDir = path.resolve('public', 'avatars');
 
-const updateAvatar = async (req, res) => {
+const editProfile = async (req, res) => {
     const { username, email, password } = req.body;
     const { _id, avatar_id: oldAvatarId, password: passwordUser, email: emailUser, username: nameUser } = req.user;
-    console.log(nameUser);
     const updateName = username ? username : nameUser;
     const updateEmail = email ? email : emailUser;
     const hashPasword = password ? await bcrypt.hash(password, 10) : passwordUser;
@@ -187,7 +186,7 @@ export default {
     verify: ctrlWrapper(verify),
     resendVerify: ctrlWrapper(resendVerify),
     signin: ctrlWrapper(signin),
-    updateAvatar: ctrlWrapper(updateAvatar),
+    editProfile: ctrlWrapper(editProfile),
     getCurrent: ctrlWrapper(getCurrent),
     logout: ctrlWrapper(logout),
     supportSendEmail: ctrlWrapper(supportSendEmail),
