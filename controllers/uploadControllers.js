@@ -1,27 +1,7 @@
 import cloudinary from '../helpers/cloudinary.js';
 import HttpError from '../helpers/HttpError.js';
 import authService from '../services/authServices.js';
-import fs from 'fs/promises';
 
-export const addAvatar = async (req, res, next) => {
-    try {
-        const { _id, avatar_id: oldAvatarId } = req.user;
-        const { url: avatarURL, public_id: avatar_id } = await cloudinary.uploader.upload(req.file.path, {
-            folder: 'avatars',
-            width: 65,
-            height: 65,
-            crop: 'fill',
-            gravity: 'auto',
-        });
-        const result = await authService.updateUser({ _id }, { avatarURL, avatar_id });
-        const previousAvatarURL = oldAvatarId;
-        await cloudinary.api.delete_resources(previousAvatarURL);
-        await fs.unlink(req.file.path);
-        res.status(201).json(result);
-    } catch (error) {
-        next(error);
-    }
-};
 
 export const getFolder = async (req, res, next) => {
     try {
@@ -36,12 +16,25 @@ export const getFolder = async (req, res, next) => {
         next(error);
     }
 };
+
 export const changeBackground = async (req, res, next) => {
     try {
         const { image } = req.query;
         if (!image) throw HttpError(400);
-        const result = await cloudinary.api.resource(image);
-        res.json({ result });
+        const prefixes = [`desktop_bg/${image}`, `tablet_bg/${image}`, `mobile_bg/${image}`];
+        const promises = prefixes.map(prefix =>
+            cloudinary.api.resources({
+                type: 'upload',
+                prefix: prefix,
+                max_results: 3,
+            })
+        );
+
+        const [a, b, c] = await Promise.all(promises);
+        const { resources: dekstop } = a;
+        const { resources: tablet } = b;
+        const { resources: mobile } = c;
+        res.json({ dekstop: dekstop[0], tablet: tablet[0], mobile: mobile[0] });
     } catch (error) {
         next(error);
     }

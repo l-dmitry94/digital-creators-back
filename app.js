@@ -6,6 +6,7 @@ import 'dotenv/config.js';
 import authRouter from './routes/authRouter.js';
 import supportRouter from './routes/supportRouter.js';
 import uploadsRouter from './routes/uploadsRouter.js';
+import boardRouter from './routes/boardRouter.js';
 const { DB_HOST, PORT } = process.env;
 
 const app = express();
@@ -18,7 +19,7 @@ app.use(express.static('public'));
 
 app.use('/api/user', uploadsRouter);
 app.use('/api/auth', authRouter);
-
+app.use('/api/board', boardRouter);
 app.use('/api/support', supportRouter);
 
 app.use((_, res) => {
