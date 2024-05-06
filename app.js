@@ -10,6 +10,7 @@ import swaggerDocumention from './swagger.json' with { type: 'json' };
 import authRouter from './routes/authRouter.js';
 import supportRouter from './routes/supportRouter.js';
 import uploadsRouter from './routes/uploadsRouter.js';
+import boardRouter from './routes/boardRouter.js';
 const { DB_HOST, PORT } = process.env;
 
 const app = express();
@@ -24,7 +25,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocumention));
 
 app.use('/api/user', uploadsRouter);
 app.use('/api/auth', authRouter);
-
+app.use('/api/board', boardRouter);
 app.use('/api/support', supportRouter);
 
 app.use((_, res) => {

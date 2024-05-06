@@ -1,10 +1,8 @@
 import { Router } from 'express';
-import upload from '../middlewares/upload.js';
-import { addAvatar, getFolder,changeBackground } from '../controllers/uploadControllers.js';
+import { getFolder, changeBackground } from '../controllers/uploadControllers.js';
 import authenticate from '../middlewares/authenticate.js';
 const uploadsRouter = Router();
 
-uploadsRouter.patch('/avatar',authenticate, upload.single('avatar'), addAvatar);//for changing avatar
 uploadsRouter.get('/folders/:folder', getFolder); //"mobile_bg", "tablet_bg", "desktop_bg" - dinamic endpoint for recive the list of background images
-uploadsRouter.patch('/background',authenticate,changeBackground)//here use query parametr. Example (image = "mobile_bg/water_surface").Full example(http://localhost:3000/api/user/background?image=tablet_bg/water_surface)
+uploadsRouter.patch('/background', authenticate, changeBackground); //here use query parametr. Example (image = "water_surface").Full example(http://localhost:3000/api/user/background?image=water_surface)
 export default uploadsRouter;

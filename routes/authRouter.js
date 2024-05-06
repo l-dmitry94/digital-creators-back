@@ -15,7 +15,7 @@ authRouter.post('/signup', validateBody(userSignupSchema), authControllers.signu
 
 authRouter.post('/signin', validateBody(userSigninSchema), authControllers.signin);
 
-authRouter.patch('/avatars', authenticate, upload.single('avatar'), authControllers.updateAvatar);
+authRouter.patch('/editProfile', authenticate, upload.single('avatar'), authControllers.editProfile);
 
 authRouter.get('/current', authenticate, authControllers.getCurrent);
 

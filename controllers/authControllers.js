@@ -2,14 +2,14 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import gravatar from 'gravatar';
 import fs from 'fs/promises';
-import path from 'path';
-import Jimp from 'jimp';
+import cloudinary from '../helpers/cloudinary.js';
 import { nanoid } from 'nanoid';
 import authServices from '../services/authServices.js';
 import ctrlWrapper from '../decorators/ctrlWrapper.js';
 import HttpError from '../helpers/HttpError.js';
 import createVerifyEmail from '../helpers/createVerifyEmail.js';
 import sendEmail from '../helpers/sendMail.js';
+
 
 const { SECRET_KEY } = process.env;
 
@@ -96,31 +96,38 @@ const signin = async (req, res) => {
     });
 };
 
-const avatarsDir = path.resolve('public', 'avatars');
+// const avatarsDir = path.resolve('public', 'avatars');
 
-const updateAvatar = async (req, res) => {
-    if (!req.file) throw HttpError(400, 'An avatar file was not added to your request');
-
-    const { _id } = req.user;
-    const { path: tempUpload, originalname } = req.file;
-
-    try {
-        const img = await Jimp.read(tempUpload);
-        await img.resize(68, 68).writeAsync(tempUpload);
-    } catch (error) {
-        // console.error('Помилка обробки зображення:', error);
-        throw HttpError(500, 'Internal Server Error');
+const editProfile = async (req, res) => {
+    const { username, email, password } = req.body;
+    const { _id, avatar_id: oldAvatarId, password: passwordUser, email: emailUser, username: nameUser } = req.user;
+    const updateName = username ? username : nameUser;
+    const updateEmail = email ? email : emailUser;
+    const hashPasword = password ? await bcrypt.hash(password, 10) : passwordUser;
+    if (!req.file) {
+        const result = await authServices.updateUser(
+            { _id },
+            { username: updateName, email: updateEmail, password: hashPasword }
+        );
+        res.status(201).json(result);
+        return;
     }
-
-    const filename = `${_id}_${originalname}`;
-    const resultUpload = path.join(avatarsDir, filename);
-    await fs.rename(tempUpload, resultUpload);
-    const avatarURL = path.join('avatars', filename);
-    await authServices.updateUser(_id, { avatarURL });
-
-    res.json({
-        avatarURL,
+    const { url: avatarURL, public_id: avatar_id } = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'avatars',
+        width: 65,
+        height: 65,
+        crop: 'fill',
+        gravity: 'auto',
     });
+    const result = await authServices.updateUser(
+        { _id },
+        { avatarURL, avatar_id, username: updateName, email: updateEmail, password: hashPasword }
+    );
+    const previousAvatarURL = oldAvatarId;
+    await cloudinary.api.delete_resources(previousAvatarURL);
+    await fs.unlink(req.file.path);
+
+    res.status(201).json(result);
 };
 
 const getCurrent = async (req, res) => {
@@ -143,9 +150,10 @@ const supportSendEmail = async (req, res) => {
     const { email, value } = req.body;
 
     const supportEmail = 'orellesha9@gmail.com';
-  
+
     const user = await authServices.findUser({ email });
-    // if (!user) {
+
+  // if (!user) {
     //   throw HttpError(404, "Email not found");
     // }
 
@@ -178,7 +186,7 @@ export default {
     verify: ctrlWrapper(verify),
     resendVerify: ctrlWrapper(resendVerify),
     signin: ctrlWrapper(signin),
-    updateAvatar: ctrlWrapper(updateAvatar),
+    editProfile: ctrlWrapper(editProfile),
     getCurrent: ctrlWrapper(getCurrent),
     logout: ctrlWrapper(logout),
     supportSendEmail: ctrlWrapper(supportSendEmail),
