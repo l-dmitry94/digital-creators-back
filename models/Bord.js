@@ -1,14 +1,32 @@
 import { Schema, model } from 'mongoose';
 import { handleServerError, setUpdateSettings } from './hooks.js';
 
+const backgroundSubSchema = new Schema({
+    desktop_url: {
+        type: String,
+    },
+    tablet_url: {
+        type: String,
+    },
+    mobile_url: {
+        type: String,
+    },
+});
+
 const boardSchema = new Schema(
     {
         board_name: {
             type: String,
             required: [true, 'Set name for new board'],
         },
-        icon_active: { type: String, default: null },
-        background: { type: Schema.Types.Mixed, default: null },
+        icon: {
+            type: String,
+            default: null,
+        },
+        background: {
+            type: backgroundSubSchema,
+            default: null,
+        },
         owner: {
             type: Schema.Types.ObjectId,
             ref: 'user',
@@ -24,6 +42,7 @@ boardSchema.post('findOneAndUpdate', handleServerError);
 
 const Board = model('board', boardSchema);
 export default Board;
+
 // task
 // Структура :
 //  user_id
