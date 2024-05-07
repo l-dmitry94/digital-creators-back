@@ -6,7 +6,6 @@ import 'dotenv/config.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocumention from './swagger.json' with { type: 'json' };
 
-
 import authRouter from './routes/authRouter.js';
 import supportRouter from './routes/supportRouter.js';
 import uploadsRouter from './routes/uploadsRouter.js';
@@ -21,11 +20,9 @@ app.use(express.json());
 app.use(express.static('public'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocumention));
 
-
-
 app.use('/api/user', uploadsRouter);
 app.use('/api/auth', authRouter);
-app.use('/api/board', boardRouter);
+app.use('/api/boards', boardRouter);
 app.use('/api/support', supportRouter);
 
 app.use((_, res) => {

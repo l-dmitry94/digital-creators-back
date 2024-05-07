@@ -1,5 +1,6 @@
-import { addBoard } from '../services/boardServices.js';
+import boardServices from '../services/boardServices.js';
 import ctrlWrapper from '../decorators/ctrlWrapper.js';
+import HttpError from '../helpers/HttpError.js';
 
 // export const getAllBoards = async (req, res, next) => {
 //     try {
@@ -22,22 +23,21 @@ import ctrlWrapper from '../decorators/ctrlWrapper.js';
 
 export const createBoard = async (req, res) => {
     const { _id: owner } = req.user;
-    const data = await addBoard({ ...req.body, owner });
+    const data = await boardServices.addBoard({ ...req.body, owner });
     res.status(201).json(data);
 };
 
-// export const deleteBoardById = async (req, res, next) => {
-//   try {
-//     const { id } = req.params;
-//     const { _id: owner } = req.user;
-//     const data = await contactsService.removeContact({ owner, id });
-//     if (!data) throw HttpError(404);
-//     res.json(data);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+export const deleteBoardById = async (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    const { _id: owner } = req.user;
+    console.log(owner);
+    const data = await boardServices.removeBoardByFilter({ owner, id });
+    if (!data) throw HttpError(404, 'Not found');
+    res.json(data);
+};
 
 export default {
     createBoard: ctrlWrapper(createBoard),
+    deleteBoardById: ctrlWrapper(deleteBoardById),
 };

@@ -5,4 +5,6 @@ export const listBoards = (filter, settings) =>
 
 export const addBoard = data => Board.create(data);
 
-export default { listBoards, addBoard };
+export const removeBoardByFilter = filter => Board.findOneAndDelete(filter);
+
+export default { listBoards, addBoard, removeBoardByFilter };
