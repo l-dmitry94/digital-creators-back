@@ -27,17 +27,40 @@ export const createBoard = async (req, res) => {
     res.status(201).json(data);
 };
 
+export const updateBoard = async (req, res) => {
+    const { _id: owner } = req.user;
+    const { id } = req.params;
+    const data = await boardServices.updateBoardByFilter({ owner, _id: id }, req.body);
+    if (!data) throw HttpError(404, `Not found`);
+    res.json(data);
+};
+
 export const deleteBoardById = async (req, res) => {
     const { id } = req.params;
-    console.log(id);
     const { _id: owner } = req.user;
-    console.log(owner);
-    const data = await boardServices.removeBoardByFilter({ owner, id });
+    const data = await boardServices.removeBoardByFilter({ owner, _id: id });
+    if (!data) throw HttpError(404, 'Not found');
+    res.status(204).send();
+};
+
+export const getAllBoards = async (req, res) => {
+    const { _id: owner } = req.user;
+    const data = await boardServices.getAllBoards({ owner });
+    res.json(data);
+};
+
+export const getBoardById = async (req, res) => {
+    const { _id: owner } = req.user;
+    const { id } = req.params;
+    const data = await boardServices.getBoardByFilter({ owner, _id: id });
     if (!data) throw HttpError(404, 'Not found');
     res.json(data);
 };
 
 export default {
     createBoard: ctrlWrapper(createBoard),
+    updateBoard: ctrlWrapper(updateBoard),
     deleteBoardById: ctrlWrapper(deleteBoardById),
+    getAllBoards: ctrlWrapper(getAllBoards),
+    getBoardById: ctrlWrapper(getBoardById),
 };

@@ -1,18 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { handleServerError, setUpdateSettings } from './hooks.js';
 
-const backgroundSubSchema = new Schema({
-    desktop_url: {
-        type: String,
-    },
-    tablet_url: {
-        type: String,
-    },
-    mobile_url: {
-        type: String,
-    },
-});
-
 const boardSchema = new Schema(
     {
         board_name: {
@@ -24,8 +12,22 @@ const boardSchema = new Schema(
             default: null,
         },
         background: {
-            type: backgroundSubSchema,
-            default: null,
+            type: {
+                _id: false,
+                desktop_url: {
+                    type: String,
+                    default: null,
+                },
+                tablet_url: {
+                    type: String,
+                    default: null,
+                },
+                mobile_url: {
+                    type: String,
+                    default: null,
+                },
+            },
+            default: {},
         },
         owner: {
             type: Schema.Types.ObjectId,
