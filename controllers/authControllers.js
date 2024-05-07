@@ -9,7 +9,7 @@ import ctrlWrapper from '../decorators/ctrlWrapper.js';
 import HttpError from '../helpers/HttpError.js';
 import createVerifyEmail from '../helpers/createVerifyEmail.js';
 import sendEmail from '../helpers/sendMail.js';
-
+import { error } from 'console';
 
 const { SECRET_KEY } = process.env;
 
@@ -96,14 +96,27 @@ const signin = async (req, res) => {
     });
 };
 
-// const avatarsDir = path.resolve('public', 'avatars');
 
 const updateAvatar = async (req, res) => {
     const { username, email, password } = req.body;
     const { _id, avatar_id: oldAvatarId, password: passwordUser, email: emailUser, username: nameUser } = req.user;
-    console.log(nameUser);
+    const user = await authServices.findUser({ email });
+
+    if (user) {
+        await fs.unlink(req.file.path);
+        throw HttpError(409, 'Email in use');
+    }
     const updateName = username ? username : nameUser;
     const updateEmail = email ? email : emailUser;
+    if (password) {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+        if (!passwordRegex.test(password))
+            throw HttpError(
+                400,
+                'Validation failed: password: Password must be at least 8 characters and contain at least one lowercase letter, one uppercase letter, and one digit'
+            );
+    }
+
     const hashPasword = password ? await bcrypt.hash(password, 10) : passwordUser;
     if (!req.file) {
         const result = await authServices.updateUser(
@@ -120,15 +133,17 @@ const updateAvatar = async (req, res) => {
         crop: 'fill',
         gravity: 'auto',
     });
+    req.avatar = avatar_id;
     const result = await authServices.updateUser(
         { _id },
         { avatarURL, avatar_id, username: updateName, email: updateEmail, password: hashPasword }
     );
+
     const previousAvatarURL = oldAvatarId;
     await cloudinary.api.delete_resources(previousAvatarURL);
     await fs.unlink(req.file.path);
 
-    res.status(201).json(result);
+    res.json(result);
 };
 
 const getCurrent = async (req, res) => {
@@ -154,12 +169,12 @@ const supportSendEmail = async (req, res) => {
 
     const user = await authServices.findUser({ email });
 
-  // if (!user) {
+    // if (!user) {
     //   throw HttpError(404, "Email not found");
     // }
 
     if (!user.verify) {
-      throw HttpError(400, "Verification has already been passed");
+        throw HttpError(400, 'Verification has already been passed');
     }
 
     const sendUserEmail = {

@@ -17,3 +17,4 @@ export const userEmailSchema = Joi.object({
     email: Joi.string().pattern(emailRegexp).required(),
     value: Joi.string(),
 });
+
