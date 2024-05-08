@@ -11,6 +11,11 @@ export const createBoard = async (req, res) => {
 export const updateBoard = async (req, res) => {
     const { _id: owner } = req.user;
     const { id } = req.params;
+    console.log(req.body);
+    const { board_name: oldName } = req.body;
+    const { board_name } = await boardServices.getBoardByFilter({ owner, _id: id });
+    if (!board_name) throw HttpError(404, 'Not found');
+    if (board_name === oldName) throw HttpError(409, 'Change board name');
     const data = await boardServices.updateBoardByFilter({ owner, _id: id }, req.body);
     if (!data) throw HttpError(404, 'Not found');
     res.json(data);

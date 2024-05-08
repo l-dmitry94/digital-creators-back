@@ -6,9 +6,9 @@ export const updateBoardByFilter = (filter, data) => Board.findOneAndUpdate(filt
 
 export const removeBoardByFilter = filter => Board.findOneAndDelete(filter);
 
-export const getAllBoards = filter => Board.find(filter, '-createdAt -updatedAt').populate('owner', '_id username');
+export const getAllBoards = filter => Board.find(filter);
 
-const getBoardByFilter = filter => Board.findOne(filter);
+export const getBoardByFilter = filter => Board.findOne(filter);
 
 export default {
     addBoard,
