@@ -3,13 +3,11 @@ import jwt from 'jsonwebtoken';
 import gravatar from 'gravatar';
 import fs from 'fs/promises';
 import cloudinary from '../helpers/cloudinary.js';
-import { nanoid } from 'nanoid';
 import authServices from '../services/authServices.js';
 import ctrlWrapper from '../decorators/ctrlWrapper.js';
 import HttpError from '../helpers/HttpError.js';
 import createVerifyEmail from '../helpers/createVerifyEmail.js';
 import sendEmail from '../helpers/sendMail.js';
-import { error } from 'console';
 
 const { SECRET_KEY } = process.env;
 
@@ -82,7 +80,7 @@ const signin = async (req, res) => {
     if (!passwordCompare) throw HttpError(401, 'Email or password is wrong');
 
     const { _id: id } = user;
-    const payload = { id };
+    const payload = { email };
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '12h' });
     await authServices.updateUser({ _id: id }, { token });
 
@@ -98,6 +96,7 @@ const signin = async (req, res) => {
 
 
 const editProfile = async (req, res) => {
+
     const { username, email, password } = req.body;
     const { _id, avatar_id: oldAvatarId, password: passwordUser, email: emailUser, username: nameUser } = req.user;
 

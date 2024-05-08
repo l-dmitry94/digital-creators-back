@@ -12,22 +12,20 @@ const authenticate = async (req, res, next) => {
 
     const [bearer, token] = authorization.split(' ');
 
-    if (bearer !== 'Bearer') {
+    if (bearer !== 'Bearer' || !token) {
         return next(HttpError(401, 'Not authorized'));
     }
-
     try {
-        const { id } = jwt.verify(token, SECRET_KEY);
-        const user = await authServices.findUser({ _id: id });
-
-        if (!user) {
+        const { email } = jwt.verify(token, SECRET_KEY);
+        const userEmail = await authServices.findUser({ email });
+        if (!userEmail) {
             return next(HttpError(401, 'User not found'));
         }
 
-        if (!user.token) {
+        if (!userEmail.token) {
             return next(HttpError(401, 'Not authorized'));
         }
-        req.user = user;
+        req.user = userEmail;
         next();
     } catch (error) {
         next(HttpError(401, 'Not authorized'));
