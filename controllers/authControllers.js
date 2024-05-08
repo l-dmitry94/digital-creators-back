@@ -94,15 +94,19 @@ const signin = async (req, res) => {
     });
 };
 
-const updateAvatar = async (req, res) => {
+
+const editProfile = async (req, res) => {
+
     const { username, email, password } = req.body;
     const { _id, avatar_id: oldAvatarId, password: passwordUser, email: emailUser, username: nameUser } = req.user;
+
     const user = await authServices.findUser({ email });
 
     if (user) {
         await fs.unlink(req.file.path);
         throw HttpError(409, 'Email in use');
     }
+
     const updateName = username ? username : nameUser;
     const updateEmail = email ? email : emailUser;
     if (password) {
@@ -144,12 +148,11 @@ const updateAvatar = async (req, res) => {
 };
 
 const getCurrent = async (req, res) => {
-    const { username, email } = req.user;
+    const { username, email, avatarURL } = req.user;
     res.json({
-        user: {
-            username,
-            email,
-        },
+        username,
+        email,
+        avatarURL
     });
 };
 
@@ -199,7 +202,7 @@ export default {
     verify: ctrlWrapper(verify),
     resendVerify: ctrlWrapper(resendVerify),
     signin: ctrlWrapper(signin),
-    updateAvatar: ctrlWrapper(updateAvatar),
+    editProfile: ctrlWrapper(editProfile),
     getCurrent: ctrlWrapper(getCurrent),
     logout: ctrlWrapper(logout),
     supportSendEmail: ctrlWrapper(supportSendEmail),
