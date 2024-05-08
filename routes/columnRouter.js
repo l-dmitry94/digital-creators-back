@@ -12,5 +12,7 @@ columnRouter.use(authenticate);
 columnRouter.post('/', validateBody(columnCreateUpdateSchema), columnControllers.createColumn);
 columnRouter.patch('/:id', isValidId, validateBody(columnCreateUpdateSchema), columnControllers.updateColumn);
 columnRouter.delete('/:id', isValidId, columnControllers.deleteColumnById);
+columnRouter.get('/', columnControllers.getAllColumns);
+columnRouter.get('/:id', isValidId, columnControllers.getColumnById);
 
 export default columnRouter;

@@ -11,7 +11,6 @@ export const createBoard = async (req, res) => {
 export const updateBoard = async (req, res) => {
     const { _id: owner } = req.user;
     const { id } = req.params;
-    console.log(req.body);
     const { board_name: oldName } = req.body;
     const { board_name } = await boardServices.getBoardByFilter({ owner, _id: id });
     if (!board_name) throw HttpError(404, 'Not found');
@@ -32,6 +31,7 @@ export const deleteBoardById = async (req, res) => {
 export const getAllBoards = async (req, res) => {
     const { _id: owner } = req.user;
     const data = await boardServices.getAllBoards({ owner });
+    if (!data) throw HttpError(404, 'Not found');
     res.json(data);
 };
 

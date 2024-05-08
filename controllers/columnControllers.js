@@ -34,8 +34,28 @@ export const deleteColumnById = async (req, res) => {
     res.status(204).send();
 };
 
+export const getAllColumns = async (req, res) => {
+    const { _id: owner } = req.user;
+    const baseUrl = req.baseUrl;
+    const ref_board = baseUrl.split('/')[3];
+    console.log(ref_board);
+    const data = await columnServices.getAllColumns({ owner, ref_board });
+    if (!data) throw HttpError(404, 'Not found');
+    res.json(data);
+};
+
+export const getColumnById = async (req, res) => {
+    const { _id: owner } = req.user;
+    const { id } = req.params;
+    const data = await columnServices.getColumnByFilter({ owner, _id: id });
+    if (!data) throw HttpError(404, 'Not found');
+    res.json(data);
+};
+
 export default {
     createColumn: ctrlWrapper(createColumn),
     updateColumn: ctrlWrapper(updateColumn),
     deleteColumnById: ctrlWrapper(deleteColumnById),
+    getAllColumns: ctrlWrapper(getAllColumns),
+    getColumnById: ctrlWrapper(getColumnById),
 };

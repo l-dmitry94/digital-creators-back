@@ -8,6 +8,8 @@ export const updateColumnByFilter = (filter, data) => Column.findOneAndUpdate(fi
 
 export const removeColumnByFilter = filter => Column.findOneAndDelete(filter);
 
+export const getAllColumns = filter => Column.find(filter);
+
 export const getColumnByFilter = filter => Column.findOne(filter);
 
 export default {
@@ -15,5 +17,6 @@ export default {
     addColumn,
     updateColumnByFilter,
     removeColumnByFilter,
+    getAllColumns,
     getColumnByFilter,
 };
