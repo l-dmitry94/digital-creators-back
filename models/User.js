@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { handleServerError, setUpdateSettings } from './hooks.js';
-import { usernameRegexp, emailRegexp } from '../constants/userConstants.js';
+import { usernameRegexp, emailRegexp, passwordRegexp } from '../constants/userConstants.js';
 
 const userSchema = new Schema(
     {
@@ -11,7 +11,7 @@ const userSchema = new Schema(
         },
         email: {
             type: String,
-            match: emailRegexp,
+            match: [emailRegexp, 'Email is invalid'],
             unique: true,
             required: [true, 'Email is required'],
         },
@@ -30,15 +30,6 @@ const userSchema = new Schema(
         token: {
             type: String,
             default: null,
-        },
-        verify: {
-            type: Boolean,
-            default: false,
-        },
-        verificationToken: {
-            type: String,
-            default: null,
-            // required: [true, 'Verify code is required'],
         },
     },
     { versionKey: false, timestamps: true }
