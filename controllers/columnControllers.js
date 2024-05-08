@@ -21,7 +21,7 @@ export const updateColumn = async (req, res) => {
     const { column_name } = await columnServices.getColumnByFilter({ owner, _id: id });
     if (!column_name) throw HttpError(404, 'Not found');
     if (column_name === oldName) throw HttpError(409, 'Change column name');
-    const data = await columnServices.updateColumnByFilter({ owner, _id: id }, ...req.body);
+    const data = await columnServices.updateColumnByFilter({ owner, _id: id }, req.body);
     if (!data) throw HttpError(404, 'Not found');
     res.json(data);
 };

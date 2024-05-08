@@ -10,7 +10,7 @@ const columnRouter = express.Router();
 columnRouter.use(authenticate);
 
 columnRouter.post('/', validateBody(columnCreateUpdateSchema), columnControllers.createColumn);
-columnRouter.patch('/:columnId', isValidId, validateBody(columnCreateUpdateSchema), columnControllers.updateColumn);
-columnRouter.delete('/:columnId', isValidId, columnControllers.deleteColumnById);
+columnRouter.patch('/:id', isValidId, validateBody(columnCreateUpdateSchema), columnControllers.updateColumn);
+columnRouter.delete('/:id', isValidId, columnControllers.deleteColumnById);
 
 export default columnRouter;
