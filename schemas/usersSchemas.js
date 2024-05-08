@@ -9,8 +9,8 @@ export const userSignupSchema = Joi.object({
 });
 
 export const userSigninSchema = Joi.object({
-    email: Joi.string().pattern(emailRegexp).required(),
-    password: Joi.string().pattern(passwordRegexp).required(),
+    email: Joi.string().pattern(emailRegexp).message('email invalid').required(),
+    password: Joi.string().pattern(passwordRegexp).message('password invalid').required(),
 });
 
 export const userEmailSchema = Joi.object({
