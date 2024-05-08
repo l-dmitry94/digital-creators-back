@@ -4,7 +4,12 @@ import columnServices from '../services/columnServices.js';
 
 export const createColumn = async (req, res) => {
     const { _id: owner } = req.user;
-    const { boardId: ref_board } = req.params;
+    console.log(req.baseUrl);
+    const baseUrl = req.baseUrl;
+    const ref_board = baseUrl.split('/')[3];
+    console.log(ref_board);
+    console.log(owner);
+    console.log(ref_board);
     // const ObjectId = mongoose.Types.ObjectId;
     // const ref_board = ObjectId(boardId)
     const data = await columnServices.addColumn({ ...req.body, ref_board, owner });
