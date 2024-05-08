@@ -1,7 +1,5 @@
 import cloudinary from '../helpers/cloudinary.js';
 import HttpError from '../helpers/HttpError.js';
-import authService from '../services/authServices.js';
-
 
 export const getFolder = async (req, res, next) => {
     try {
