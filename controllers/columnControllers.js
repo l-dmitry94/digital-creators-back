@@ -4,9 +4,10 @@ import columnServices from '../services/columnServices.js';
 
 export const createColumn = async (req, res) => {
     const { _id: owner } = req.user;
-    const ref_board = req.baseUrl.split('/')[3];
+    const baseUrl = req.baseUrl;
+    const ref_board = baseUrl.split('/')[3];
     const column_name = req.body;
-    const column = await columnServices.findColumn({ column_name });
+    const column = await columnServices.findColumn({ owner, ref_board, ...column_name });
     if (column) throw HttpError(409, 'Сolumn name in use');
 
     const data = await columnServices.addColumn({ ...req.body, ref_board, owner });

@@ -6,7 +6,7 @@ const columnSchema = new Schema(
         column_name: {
             type: String,
             required: [true, 'Column name is required'],
-            unique: true,
+            // unique: true,
         },
         ref_board: {
             type: Schema.Types.ObjectId,
