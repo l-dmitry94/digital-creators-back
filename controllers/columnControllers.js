@@ -4,18 +4,24 @@ import columnServices from '../services/columnServices.js';
 
 export const createColumn = async (req, res) => {
     const { _id: owner } = req.user;
-    console.log(req.baseUrl);
-    const baseUrl = req.baseUrl;
-    const ref_board = baseUrl.split('/')[3];
-    console.log(ref_board);
-    console.log(owner);
-    console.log(ref_board);
-    // const ObjectId = mongoose.Types.ObjectId;
-    // const ref_board = ObjectId(boardId)
+    const ref_board = req.baseUrl.split('/')[3];
+    const column_name = req.body;
+    const column = await columnServices.findColumn({ column_name });
+    if (column) throw HttpError(409, 'Сolumn name in use');
+
     const data = await columnServices.addColumn({ ...req.body, ref_board, owner });
     res.status(201).json(data);
 };
 
+export const updateColumn = async (req, res) => {
+    const { _id: owner } = req.user;
+    const { id } = req.params;
+    const data = await columnServices.updateColumnByFilter({ owner, _id: id }, req.body);
+    if (!data) throw HttpError(404, 'Not found');
+    res.json(data);
+};
+
 export default {
     createColumn: ctrlWrapper(createColumn),
+    updateColumn: ctrlWrapper(updateColumn),
 };

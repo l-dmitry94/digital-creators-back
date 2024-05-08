@@ -12,7 +12,7 @@ export const updateBoard = async (req, res) => {
     const { _id: owner } = req.user;
     const { id } = req.params;
     const data = await boardServices.updateBoardByFilter({ owner, _id: id }, req.body);
-    if (!data) throw HttpError(404, `Not found`);
+    if (!data) throw HttpError(404, 'Not found');
     res.json(data);
 };
 
@@ -44,4 +44,4 @@ export default {
     deleteBoardById: ctrlWrapper(deleteBoardById),
     getAllBoards: ctrlWrapper(getAllBoards),
     getBoardById: ctrlWrapper(getBoardById),
-}
+};

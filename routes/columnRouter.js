@@ -9,5 +9,6 @@ const columnRouter = express.Router();
 columnRouter.use(authenticate);
 
 columnRouter.post('/', validateBody(columnCreateUpdateSchema), columnControllers.createColumn);
+columnRouter.patch('/columnId', validateBody(columnCreateUpdateSchema), columnControllers.updateColumn);
 
 export default columnRouter;

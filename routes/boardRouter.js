@@ -2,7 +2,7 @@ import express from 'express';
 import boardControllers from '../controllers/boardControllers.js';
 import authenticate from '../middlewares/authenticate.js';
 import validateBody from '../decorators/validateBody.js';
-import { boardCreateSchema, boardUpdateSchema } from '../schemas/boardsschemas.js';
+import { boardCreateSchema, boardUpdateSchema } from '../schemas/boardsSchemas.js';
 import isValidId from '../middlewares/isValidId.js';
 
 const boardRouter = express.Router();

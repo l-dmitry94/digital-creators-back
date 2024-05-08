@@ -1,10 +1,5 @@
 import Board from '../models/Bord.js';
 
-// export const listBoards = (filter, settings) =>
-//     Board.find(filter, null, settings).populate('owner', 'email subscription');
-
-// export const findBoard =
-
 export const addBoard = data => Board.create(data);
 
 export const updateBoardByFilter = (filter, data) => Board.findOneAndUpdate(filter, data);
