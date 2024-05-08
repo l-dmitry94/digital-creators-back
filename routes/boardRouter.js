@@ -8,7 +8,7 @@ import isValidId from '../middlewares/isValidId.js';
 const boardRouter = express.Router();
 
 boardRouter.use(authenticate);
-// boardRouter.get('/', getAllBoards);
+
 boardRouter.post('/', validateBody(boardCreateSchema), boardControllers.createBoard);
 boardRouter.patch('/:id', isValidId, validateBody(boardUpdateSchema), boardControllers.updateBoard);
 boardRouter.delete('/:id', isValidId, boardControllers.deleteBoardById);

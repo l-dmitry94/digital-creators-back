@@ -5,7 +5,7 @@ const boardSchema = new Schema(
     {
         board_name: {
             type: String,
-            required: [true, 'Set name for new board'],
+            required: [true, 'Board name is required'],
         },
         icon: {
             type: String,
@@ -43,6 +43,7 @@ boardSchema.post('save', handleServerError);
 boardSchema.post('findOneAndUpdate', handleServerError);
 
 const Board = model('board', boardSchema);
+
 export default Board;
 
 // task
