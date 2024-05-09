@@ -10,24 +10,12 @@ const boardSchema = new Schema(
         icon: {
             type: String,
             default: null,
+            required: [true, 'Board icon is required'],
         },
         background: {
-            type: {
-                _id: false,
-                desktop_url: {
-                    type: String,
-                    default: null,
-                },
-                tablet_url: {
-                    type: String,
-                    default: null,
-                },
-                mobile_url: {
-                    type: String,
-                    default: null,
-                },
-            },
-            default: {},
+            type: String,
+            default: null,
+            required: [true, 'Board background is required'],
         },
         owner: {
             type: Schema.Types.ObjectId,
