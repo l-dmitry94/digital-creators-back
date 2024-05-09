@@ -5,10 +5,30 @@ const boardSchema = new Schema(
     {
         board_name: {
             type: String,
-            required: [true, 'Set name for new board'],
+            required: [true, 'Board name is required'],
         },
-        icon_active: { type: String, default: null },
-        background: { type: Schema.Types.Mixed, default: null },
+        icon: {
+            type: String,
+            default: null,
+        },
+        background: {
+            type: {
+                _id: false,
+                desktop_url: {
+                    type: String,
+                    default: null,
+                },
+                tablet_url: {
+                    type: String,
+                    default: null,
+                },
+                mobile_url: {
+                    type: String,
+                    default: null,
+                },
+            },
+            default: {},
+        },
         owner: {
             type: Schema.Types.ObjectId,
             ref: 'user',
@@ -23,7 +43,9 @@ boardSchema.post('save', handleServerError);
 boardSchema.post('findOneAndUpdate', handleServerError);
 
 const Board = model('board', boardSchema);
+
 export default Board;
+
 // task
 // Структура :
 //  user_id
