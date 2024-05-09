@@ -8,6 +8,7 @@ import ctrlWrapper from '../decorators/ctrlWrapper.js';
 import HttpError from '../helpers/HttpError.js';
 import createVerifyEmail from '../helpers/createVerifyEmail.js';
 import sendEmail from '../helpers/sendMail.js';
+import { passwordRegexp } from '../constants/userConstants.js';
 
 const { SECRET_KEY } = process.env;
 
@@ -20,13 +21,13 @@ const signup = async (req, res) => {
     const avatarURL = gravatar.url(email);
     // const verificationToken = nanoid();
 
-    const payload = { email };
-    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '12h' });
-
-    const newUser = await authServices.signup({ ...req.body, password: hashPassword, avatarURL, token });
+    const newUser = await authServices.signup({ ...req.body, password: hashPassword, avatarURL });
 
     // const verifyEmail = createVerifyEmail(email, verificationToken);
     // await sendEmail(verifyEmail);
+    const payload = { email: newUser.email, id: newUser._id };
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '12h' });
+    await authServices.updateUser({ _id: newUser._id }, { token });
 
     res.status(201).json({
         token,
@@ -80,7 +81,7 @@ const signin = async (req, res) => {
     if (!passwordCompare) throw HttpError(401, 'Email or password is wrong');
 
     const { _id: id } = user;
-    const payload = { email };
+    const payload = { email, id };
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '12h' });
     await authServices.updateUser({ _id: id }, { token });
 
@@ -96,7 +97,15 @@ const signin = async (req, res) => {
 
 const updateAvatar = async (req, res) => {
     const { username, email, password } = req.body;
-    const { _id, avatar_id: oldAvatarId, password: passwordUser, email: emailUser, username: nameUser } = req.user;
+    const {
+        _id,
+        avatar_id: oldAvatarId,
+        password: passwordUser,
+        email: emailUser,
+        username: nameUser,
+        token,
+    } = req.user;
+
     const user = await authServices.findUser({ email });
 
     if (user) {
@@ -106,8 +115,7 @@ const updateAvatar = async (req, res) => {
     const updateName = username ? username : nameUser;
     const updateEmail = email ? email : emailUser;
     if (password) {
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-        if (!passwordRegex.test(password))
+        if (!passwordRegexp.test(password))
             throw HttpError(
                 400,
                 'Validation failed: password: Password must be at least 8 characters and contain at least one lowercase letter, one uppercase letter, and one digit'
