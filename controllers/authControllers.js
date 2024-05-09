@@ -173,9 +173,9 @@ const supportSendEmail = async (req, res) => {
     //   throw HttpError(404, "Email not found");
     // }
 
-    if (!user.verify) {
-        throw HttpError(400, 'Verification has already been passed');
-    }
+    // if (!user.verify) {
+    //     throw HttpError(400, 'Verification has already been passed');
+    // }
 
     const sendUserEmail = {
         to: email,
