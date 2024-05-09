@@ -6,3 +6,10 @@ export const cardCreateSchema = Joi.object({
     priority: Joi.string().required(),
     deadline: Joi.string().required(),
 });
+
+export const cardUpdateSchema = Joi.object({
+    card_name: Joi.string(),
+    description: Joi.string(),
+    priority: Joi.string(),
+    deadline: Joi.string(),
+});

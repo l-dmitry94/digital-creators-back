@@ -17,10 +17,10 @@ export const createColumn = async (req, res) => {
 export const updateColumn = async (req, res) => {
     const { _id: owner } = req.user;
     const { id } = req.params;
-    const { column_name: oldName } = req.body;
+    const { column_name: newName } = req.body;
     const { column_name } = await columnServices.getColumnByFilter({ owner, _id: id });
     if (!column_name) throw HttpError(404, 'Not found');
-    if (column_name === oldName) throw HttpError(409, 'Change column name');
+    if (column_name === newName) throw HttpError(409, 'Change column name');
     const data = await columnServices.updateColumnByFilter({ owner, _id: id }, req.body);
     if (!data) throw HttpError(404, 'Not found');
     res.json(data);
