@@ -1,383 +1,626 @@
 {
     "openapi": "3.0.1",
     "info": {
-      "version": "1.0.0",
-      "title": "Swagger Test",
-      "description": "Showing off swagger-ui-express",
-      "license": {
-        "name": "MIT",
-        "url": "https://opensource.org/licenses/MIT"
-      }
+        "version": "1.0.0",
+        "title": "Swagger Test",
+        "description": "Showing off swagger-ui-express",
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
     },
-    "servers": [
-      { "url": "http://localhost:3000/api" },
-      { "url": "https://digital-creators-back.onrender.com/api" }
-    ],
+    "servers": [{ "url": "http://localhost:3000/api" }, { "url": "https://digital-creators-back.onrender.com/api" }],
     "tags": [
-      {
-        "name": "Auth",
-        "description": "Authorization endpoints"
-      },
-      {
-        "name": "Support",
-        "description": "Sending email for supporting"
-      }
+        {
+            "name": "Auth",
+            "description": "Authorization endpoints"
+        },
+        {
+            "name": "Support",
+            "description": "Sending email for supporting"
+        },
+        {
+            "name": "User",
+            "description": "Changing the background of boards"
+        }
     ],
     "paths": {
-      "/auth/signup": {
-        "post": {
-          "tags": ["Auth"],
-          "summary": "User Signup",
-          "parameters": [],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RegistrationRequest"
+        "/auth/signup": {
+            "post": {
+                "tags": ["Auth"],
+                "summary": "User Signup",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegistrationRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User signed up successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request (invalid request body)",
+                        "content": {}
+                    },
+                    "409": {
+                        "description": "Email in use"
+                    }
                 }
-              }
             }
-          },
-          "responses": {
-            "201": {
-              "description": "User signed up successfully",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/LoginResponse"
-                  }
+        },
+        "/auth/signin": {
+            "post": {
+                "tags": ["Auth"],
+                "summary": "User Signin",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User signed in successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized (Email or password is wrong)"
+                    },
+                    "400": {
+                        "description": "Bad request (invalid request body)",
+                        "content": {}
+                    },
+                    "409": {
+                        "description": "Email in use"
+                    }
                 }
-              }
-            },
-            "400": {
-              "description": "Bad request (invalid request body)",
-              "content": {}
-            },
-            "409": {
-              "description": "Email in use"
             }
-          }
+        },
+        "/auth/editProfile": {
+            "patch": {
+                "tags": ["Auth"],
+                "summary": "Update User Avatar",
+                "parameters": [],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateInfoUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User avatar updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateInfoUserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request (invalid request body)"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "401": {
+                        "description": "Not authorized"
+                    }
+                }
+            }
+        },
+        "/auth/current": {
+            "get": {
+                "tags": ["Auth"],
+                "summary": "Get Current User",
+                "parameters": [],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieve current user's information",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CurrentUserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Not authorized"
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": ["Auth"],
+                "summary": "Logout User",
+                "parameters": [],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "User logged out successfully"
+                    },
+                    "401": {
+                        "description": "Not authorized"
+                    }
+                }
+            }
+        },
+        "/support/sendmail": {
+            "post": {
+                "tags": ["Support"],
+                "summary": "Send message for getting support",
+                "parameters": [],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SupportMailRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Email sent"
+                    },
+                    "400": {
+                        "type": "object",
+                        "description": "Bad request (invalid request body)"
+                    }
+                }
+            }
+        },
+        "/user/folders/{folder}": {
+            "get": {
+                "tags": ["User"],
+                "summary": "Get Folder by ID",
+                "parameters": [
+                    {
+                        "name": "folder",
+                        "in": "path",
+                        "description": "ID of the folder",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": ["mobile_bg", "tablet_bg", "desktop_bg"]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Variants of background",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UploadBackgroundsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Not authorized"
+                    }
+                }
+            }
+        },
+        "/user/background": {
+            "patch": {
+                "tags": ["User"],
+                "summary": "Get Background Image",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "image",
+                        "in": "query",
+                        "description": "Image name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }, 
+                        "example": "water_surface"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Background image retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BackgroundImageResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request (invalid parameter)"
+                    }
+                }
+            }
         }
-      },
-      "/auth/signin": {
-        "post": {
-          "tags": ["Auth"],
-          "summary": "User Signin",
-          "parameters": [],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LoginRequest"
-                }
-              }
-            }
-          },
-          "responses": {
-            "201": {
-              "description": "User signed in successfully",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/LoginResponse"
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Unauthorized (Email or password is wrong)"
-            },
-            "400": {
-              "description": "Bad request (invalid request body)",
-              "content": {}
-            },
-            "409": {
-              "description": "Email in use"
-            }
-          }
-        }
-      },
-      "/auth/editProfile": {
-        "patch": {
-          "tags": ["Auth"],
-          "summary": "Update User Avatar",
-          "parameters": [],
-          "security": [
-            {
-              "BearerAuth": []
-            }
-          ],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "multipart/form-data": {
-                "schema": {
-                  "$ref": "#/components/schemas/UpdateInfoUserRequest"
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "User avatar updated successfully",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/UpdateInfoUserResponse"
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "An avatar file was not added to your request"
-            },
-            "500": {
-              "description": "Internal Server Error"
-            },
-            "401": {
-              "description": "Not authorized"
-            }
-          }
-        }
-      },
-      "/auth/current": {
-        "get": {
-          "tags": ["Auth"],
-          "summary": "Get Current User",
-          "parameters": [],
-          "security": [
-            {
-              "BearerAuth": []
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Retrieve current user's information",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/CurrentUserResponse"
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Not authorized"
-            }
-          }
-        }
-      },
-      "/auth/logout": {
-        "post": {
-          "tags": ["Auth"],
-          "summary": "Logout User",
-          "parameters": [],
-          "security": [
-            {
-              "BearerAuth": []
-            }
-          ],
-          "responses": {
-            "204": {
-              "description": "User logged out successfully"
-            },
-            "401": {
-              "description": "Not authorized"
-            }
-          }
-        }
-      }
     },
     "components": {
-      "schemas": {
-        "RegistrationRequest": {
-          "type": "object",
-          "properties": {
-            "username": {
-              "type": "string",
-              "description": "User's username"
-            },
-            "email": {
-              "type": "string",
-              "description": "User's email",
-              "format": "email"
-            },
-            "password": {
-              "type": "string",
-              "description": "User's password",
-              "example": "qwerty123"
-            }
-          },
-          "required": ["username", "email", "password"]
-        },
-        "RegistrationResponse": {
-          "type": "object",
-          "properties": {
-            "user": {
-              "type": "object",
-              "properties": {
-                "username": {
-                  "type": "string",
-                  "description": "User's username"
+        "schemas": {
+            "RegistrationRequest": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "description": "User's username"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "User's email",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "User's password",
+                        "example": "Qwerty123"
+                    }
                 },
-                "email": {
-                  "type": "string",
-                  "description": "User's email",
-                  "format": "email"
+                "required": ["username", "email", "password"]
+            },
+            "RegistrationResponse": {
+                "type": "object",
+                "properties": {
+                    "user": {
+                        "type": "object",
+                        "properties": {
+                            "username": {
+                                "type": "string",
+                                "description": "User's username"
+                            },
+                            "email": {
+                                "type": "string",
+                                "description": "User's email",
+                                "format": "email"
+                            }
+                        }
+                    }
+                },
+                "example": {
+                    "user": {
+                        "username": "Ivan",
+                        "email": "vegrke@gufum.com"
+                    }
                 }
-              }
-            }
-          },
-          "example": {
-            "user": {
-              "username": "Ivan",
-              "email": "vegrke@gufum.com"
-            }
-          }
-        },
-        "LoginRequest": {
-          "type": "object",
-          "required": ["email", "password"],
-          "properties": {
-            "email": {
-              "type": "string",
-              "description": "User's email",
-              "format": "email"
             },
-            "password": {
-              "type": "string",
-              "description": "User's password",
-              "example": "qwerty123"
-            }
-          }
-        },
-        "LoginResponse": {
-          "type": "object",
-          "properties": {
-            "token": {
-              "type": "string",
-              "description": "User's token"
-            },
-            "user": {
-              "type": "object",
-              "properties": {
-                "username": {
-                  "type": "string",
-                  "description": "User's username"
-                },
-                "email": {
-                  "type": "string",
-                  "description": "User's email",
-                  "format": "email"
-                },
-                "avatarURL": {
-                  "type": "string",
-                  "description": "User's avatar",
-                  "example": "//www.gravatar.com/avatar/412dcbc34b007af7ab075bfaa26c98f0"
+            "LoginRequest": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "User's email",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "User's password",
+                        "example": "Qwerty123"
+                    }
                 }
-              }
-            }
-          },
-          "example": {
-            "token": "your_jwt_token",
-            "user": {
-              "username": "Ivan",
-              "email": "vegrke@gufum.com",
-              "avatarURL": "//www.gravatar.com/avatar/412dcbc34b007af7ab075bfaa26c98f0"
-            }
-          }
-        },
-        "CurrentUserResponse": {
-          "type": "object",
-          "properties": {
-            "user": {
-              "type": "object",
-              "properties": {
-                "username": {
-                  "type": "string",
-                  "description": "User's username"
+            },
+            "LoginResponse": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "description": "User's token"
+                    },
+                    "user": {
+                        "type": "object",
+                        "properties": {
+                            "username": {
+                                "type": "string",
+                                "description": "User's username"
+                            },
+                            "email": {
+                                "type": "string",
+                                "description": "User's email",
+                                "format": "email"
+                            },
+                            "avatarURL": {
+                                "type": "string",
+                                "description": "User's avatar",
+                                "example": "//www.gravatar.com/avatar/412dcbc34b007af7ab075bfaa26c98f0"
+                            }
+                        }
+                    }
                 },
-                "email": {
-                  "type": "string",
-                  "description": "User's email",
-                  "format": "email"
-                },
-                "avatarURL": {
-                  "type": "string",
-                  "description": "User's avatar",
-                  "example": "//www.gravatar.com/avatar/412dcbc34b007af7ab075bfaa26c98f0"
+                "example": {
+                    "token": "your_jwt_token",
+                    "user": {
+                        "username": "Ivan",
+                        "email": "vegrke@gufum.com",
+                        "avatarURL": "//www.gravatar.com/avatar/412dcbc34b007af7ab075bfaa26c98f0"
+                    }
                 }
-              }
+            },
+            "CurrentUserResponse": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "description": "User's username"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "User's email",
+                        "format": "email"
+                    },
+                    "avatarURL": {
+                        "type": "string",
+                        "description": "User's avatar",
+                        "example": "//www.gravatar.com/avatar/412dcbc34b007af7ab075bfaa26c98f0"
+                    }
+                },
+                "example": {
+                    "username": "Ivan",
+                    "email": "vegrke@gufum.com",
+                    "avatarURL": "//www.gravatar.com/avatar/412dcbc34b007af7ab075bfaa26c98f0"
+                }
+            },
+            "UpdateInfoUserRequest": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "description": "New username"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "New email address"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "New password"
+                    },
+                    "avatar": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "New avatar image (JPEG or PNG)"
+                    }
+                }
+            },
+            "UpdateInfoUserResponse": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": "User ID"
+                    },
+                    "username": {
+                        "type": "string",
+                        "description": "Updated username"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "Updated email address"
+                    },
+                    "avatarURL": {
+                        "type": "string",
+                        "description": "URL of updated avatar"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "Updated password"
+                    },
+                    "avatar_id": {
+                        "type": "string",
+                        "description": "Updated avatar ID"
+                    },
+                    "token": {
+                        "type": "string",
+                        "description": "JWT token"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "description": "Creare date"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "description": "Upadate date"
+                    }
+                },
+                "example": {
+                    "_id": "123456789",
+                    "username": "Ivan",
+                    "email": "vegrke@gufum.com",
+                    "avatarURL": "//www.gravatar.com/avatar/412dcbc34b007af7ab075bfaa26c98f0",
+                    "password": "$2b$10$1I65qPx8alJqIU87miqMj.3TcvvXV88mlvo.W1PvGeiGboOnEeONG",
+                    "avatar_id": "355553egdgdgdg",
+                    "token": "your_jwt_token",
+                    "createdAt": "2024-05-08T14:53:38.043Z",
+                    "updatedAt": "2024-05-09T11:29:24.783Z"
+                }
+            },
+            "SupportMailRequest": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "New email address",
+                        "format": "email"
+                    },
+                    "value": {
+                        "type": "string",
+                        "description": "Text for sendnig to support"
+                    }
+                },
+                "example": {
+                    "email": "vegrke@gufum.com",
+                    "value": "This application is very userfull!"
+                },
+                "required": ["email"]
+            },
+            "UploadBackgroundsResponse": {
+                "type": "object",
+                "properties": {
+                    "resources": [{}, {}]
+                },
+                "example": {
+                    "resources": [
+                        {
+                            "asset_id": "ccad7972e4e47aaea55746d515491266",
+                            "public_id": "mobile_bg/balloon",
+                            "format": "jpg",
+                            "version": "1714735011",
+                            "resource_type": "image",
+                            "type": "upload",
+                            "created_at": "2024-05-03T11:16:51Z",
+                            "bytes": "42280",
+                            "width": "375",
+                            "height": "812",
+                            "folder": "mobile_bg",
+                            "url": "http://res.cloudinary.com/dozbtab7q/image/upload/v1714735011/mobile_bg/balloon.jpg",
+                            "secure_url": "https://res.cloudinary.com/dozbtab7q/image/upload/v1714735011/mobile_bg/balloon.jpg",
+                            "last_updated": {
+                                "public_id_updated_at": "2024-05-04T06:12:39+00:00",
+                                "updated_at": "2024-05-04T06:12:39+00:00"
+                            }
+                        }
+                    ]
+                }
+            },
+            "BackgroundImageResponse": {
+                "type": "object",
+                "properties": {
+                    "dekstop": {
+                        "type": "object",
+                        "description": "URL of the background image for dekstop"
+                    },
+                    "tablet": {
+                        "type": "object",
+                        "description": "URL of the background image for tablet"
+                    },
+                    "mobile": {
+                        "type": "object",
+                        "description": "URL of the background image for modile"
+                    }
+                },
+                "example":{
+                    "dekstop": {
+                        "asset_id": "139a3946ed2b50925f0742ee80248db1",
+                        "public_id": "desktop_bg/water_surface",
+                        "format": "jpg",
+                        "version": 1714735102,
+                        "resource_type": "image",
+                        "type": "upload",
+                        "created_at": "2024-05-03T11:18:22Z",
+                        "bytes": 42070,
+                        "width": 1180,
+                        "height": 770,
+                        "folder": "desktop_bg",
+                        "url": "http://res.cloudinary.com/dozbtab7q/image/upload/v1714735102/desktop_bg/water_surface.jpg",
+                        "secure_url": "https://res.cloudinary.com/dozbtab7q/image/upload/v1714735102/desktop_bg/water_surface.jpg",
+                        "last_updated": {
+                            "public_id_updated_at": "2024-05-04T06:28:53+00:00",
+                            "updated_at": "2024-05-04T06:28:53+00:00"
+                        }
+                    },
+                    "tablet": {
+                        "asset_id": "6758befbff14418bf3ba8bd43e948d51",
+                        "public_id": "tablet_bg/water_surface",
+                        "format": "jpg",
+                        "version": 1714735052,
+                        "resource_type": "image",
+                        "type": "upload",
+                        "created_at": "2024-05-03T11:17:32Z",
+                        "bytes": 42837,
+                        "width": 768,
+                        "height": 956,
+                        "folder": "tablet_bg",
+                        "url": "http://res.cloudinary.com/dozbtab7q/image/upload/v1714735052/tablet_bg/water_surface.jpg",
+                        "secure_url": "https://res.cloudinary.com/dozbtab7q/image/upload/v1714735052/tablet_bg/water_surface.jpg",
+                        "last_updated": {
+                            "public_id_updated_at": "2024-05-04T06:28:47+00:00",
+                            "updated_at": "2024-05-04T06:28:47+00:00"
+                        }
+                    },
+                    "mobile": {
+                        "asset_id": "19d2418eef988af65cc538c392fba9f1",
+                        "public_id": "mobile_bg/water_surface",
+                        "format": "jpg",
+                        "version": 1714735012,
+                        "resource_type": "image",
+                        "type": "upload",
+                        "created_at": "2024-05-03T11:16:52Z",
+                        "bytes": 20918,
+                        "width": 375,
+                        "height": 812,
+                        "folder": "mobile_bg",
+                        "url": "http://res.cloudinary.com/dozbtab7q/image/upload/v1714735012/mobile_bg/water_surface.jpg",
+                        "secure_url": "https://res.cloudinary.com/dozbtab7q/image/upload/v1714735012/mobile_bg/water_surface.jpg",
+                        "last_updated": {
+                            "public_id_updated_at": "2024-05-04T06:28:48+00:00",
+                            "updated_at": "2024-05-04T06:28:48+00:00"
+                        }
+                    }
+                }
             }
-          },
-          "example": {
-            "user": {
-              "username": "Ivan",
-              "email": "vegrke@gufum.com",
-              "avatarURL": "//www.gravatar.com/avatar/412dcbc34b007af7ab075bfaa26c98f0"
-            }
-          }
         },
-        "UpdateInfoUserRequest": {
-          "type": "object",
-          "properties": {
-            "username": {
-              "type": "string",
-              "description": "New username"
-            },
-            "email": {
-              "type": "string",
-              "description": "New email address"
-            },
-            "password": {
-              "type": "string",
-              "description": "New password"
-            },
-            "avatar": {
-              "type": "string",
-              "format": "binary",
-              "description": "New avatar image (JPEG or PNG)"
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
             }
-          }
-        },
-        "UpdateInfoUserResponse": {
-          "type": "object",
-          "properties": {
-            "_id": {
-              "type": "string",
-              "description": "User ID"
-            },
-            "username": {
-              "type": "string",
-              "description": "Updated username"
-            },
-            "email": {
-              "type": "string",
-              "description": "Updated email address"
-            },
-            "avatarURL": {
-              "type": "string",
-              "description": "URL of updated avatar"
-            }
-          },
-          "example": {
-            "_id": "123456789",
-            "username": "Ivan",
-            "email": "vegrke@gufum.com",
-            "avatarURL": "//www.gravatar.com/avatar/412dcbc34b007af7ab075bfaa26c98f0"
-          }
         }
-      },
-      "securitySchemes": {
-        "BearerAuth": {
-          "type": "http",
-          "scheme": "bearer",
-          "bearerFormat": "JWT"
-        }
-      }
     }
-  }
-  
-  
+}
