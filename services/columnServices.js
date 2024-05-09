@@ -11,7 +11,6 @@ export const getAllColumns = filter => Column.find(filter);
 export const getColumnByFilter = filter => Column.findOne(filter);
 
 export default {
-    findColumn,
     addColumn,
     updateColumnByFilter,
     removeColumnByFilter,

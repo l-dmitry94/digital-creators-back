@@ -27,7 +27,7 @@ app.use('/api/user', uploadsRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/boards', boardRouter);
 app.use('/api/boards/:boardId/columns', columnRouter);
-app.use('/api/boards/:boardId/columns/:columnId', cardRouter);
+app.use('/api/boards/:boardId/columns/:columnId/cards', cardRouter);
 app.use('/api/support', supportRouter);
 
 app.use((_, res) => {
