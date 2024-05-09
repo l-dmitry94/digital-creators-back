@@ -4,10 +4,10 @@ import columnServices from '../services/columnServices.js';
 
 export const createColumn = async (req, res) => {
     const { _id: owner } = req.user;
-    const baseUrl = req.baseUrl;
-    const ref_board = baseUrl.split('/')[3];
+    const baseUrl = req.baseUrl.split('/');
+    const ref_board = baseUrl[3];
     const column_name = req.body;
-    const column = await columnServices.findColumn({ owner, ref_board, ...column_name });
+    const column = await columnServices.getColumnByFilter({ owner, ref_board, ...column_name });
     if (column) throw HttpError(409, 'Сolumn name in use');
 
     const data = await columnServices.addColumn({ ...req.body, ref_board, owner });
@@ -36,9 +36,8 @@ export const deleteColumnById = async (req, res) => {
 
 export const getAllColumns = async (req, res) => {
     const { _id: owner } = req.user;
-    const baseUrl = req.baseUrl;
-    const ref_board = baseUrl.split('/')[3];
-    console.log(ref_board);
+    const baseUrl = req.baseUrl.split('/');
+    const ref_board = baseUrl[3];
     const data = await columnServices.getAllColumns({ owner, ref_board });
     if (!data) throw HttpError(404, 'Not found');
     res.json(data);
