@@ -14,7 +14,7 @@ export const createCard = async (req, res) => {
 export const updateCard = async (req, res) => {
     const { _id: owner } = req.user;
     const { id } = req.params;
-    const { card_name: newName } = req.body?.card_name;
+    const newName = req.body?.card_name;
     if (newName) {
         const { card_name } = await cardServices.getCardByFilter({ owner, _id: id });
         if (!card_name) throw HttpError(404, 'Not found');
