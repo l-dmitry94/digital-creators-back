@@ -18,15 +18,15 @@ const authenticate = async (req, res, next) => {
     try {
         const  {email,id} = jwt.verify(token, SECRET_KEY);
         console.log(email,id);
-        const userEmail = await authServices.findUser({ _id:id });
-        if (!userEmail) {
+        const user = await authServices.findUser({ _id:id });
+        if (!user) {
             return next(HttpError(401, 'User not found'));
         }
 
-        if (!userEmail.token) {
+        if (!user.token) {
             return next(HttpError(401, 'Not authorized'));
         }
-        req.user = userEmail;
+        req.user = user;
         next();
     } catch (error) {
         next(HttpError(401, 'Not authorized'));
