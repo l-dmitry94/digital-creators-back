@@ -9,7 +9,6 @@ export const createColumn = async (req, res) => {
     const column_name = req.body;
     const column = await columnServices.getColumnByFilter({ owner, ref_board, ...column_name });
     if (column) throw HttpError(409, 'Сolumn name in use');
-
     const data = await columnServices.addColumn({ ...req.body, ref_board, owner });
     res.status(201).json(data);
 };
@@ -17,10 +16,12 @@ export const createColumn = async (req, res) => {
 export const updateColumn = async (req, res) => {
     const { _id: owner } = req.user;
     const { id } = req.params;
-    const { column_name: newName } = req.body;
-    const { column_name } = await columnServices.getColumnByFilter({ owner, _id: id });
-    if (!column_name) throw HttpError(404, 'Not found');
-    if (column_name === newName) throw HttpError(409, 'Change column name');
+    const newName = req.body?.column_name;
+    if (newName) {
+        const { column_name } = await columnServices.getColumnByFilter({ owner, _id: id });
+        if (!column_name) throw HttpError(404, 'Not found');
+        if (column_name === newName) throw HttpError(409, 'Change column name');
+    }
     const data = await columnServices.updateColumnByFilter({ owner, _id: id }, req.body);
     if (!data) throw HttpError(404, 'Not found');
     res.json(data);
