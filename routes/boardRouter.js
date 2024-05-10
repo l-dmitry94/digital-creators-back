@@ -1,10 +1,18 @@
-import { Router } from 'express';
-import {getAllBoards, deleteBoardById, createBoard} from '../controllers/boardControllers.js'
+import express from 'express';
+import boardControllers from '../controllers/boardControllers.js';
 import authenticate from '../middlewares/authenticate.js';
-const boardRouter = Router();
+import validateBody from '../decorators/validateBody.js';
+import { boardCreateSchema, boardUpdateSchema } from '../schemas/boardsSchemas.js';
+import isValidId from '../middlewares/isValidId.js';
 
-boardRouter.get('/', getAllBoards);
-boardRouter.delete("/:id",  deleteBoardById);
-boardRouter.post("/",authenticate, createBoard);
+const boardRouter = express.Router();
 
-export default boardRouter
+boardRouter.use(authenticate);
+
+boardRouter.post('/', validateBody(boardCreateSchema), boardControllers.createBoard);
+boardRouter.patch('/:id', isValidId, validateBody(boardUpdateSchema), boardControllers.updateBoard);
+boardRouter.delete('/:id', isValidId, boardControllers.deleteBoardById);
+boardRouter.get('/', boardControllers.getAllBoards);
+boardRouter.get('/:id', isValidId, boardControllers.getBoardById);
+
+export default boardRouter;
