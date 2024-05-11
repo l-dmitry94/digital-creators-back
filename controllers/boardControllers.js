@@ -1,12 +1,37 @@
 import boardServices from '../services/boardServices.js';
 import ctrlWrapper from '../decorators/ctrlWrapper.js';
 import HttpError from '../helpers/HttpError.js';
+import cloudinary from '../helpers/cloudinary.js';
 
 export const createBoard = async (req, res) => {
     const { _id: owner } = req.user;
-    const data = await boardServices.addBoard({ ...req.body, owner });
+    const { icon, board_name, background: image } = req.body;
+    const boardsByOwner = await boardServices.getAllBoards({ owner });
+    const nameBoard = boardsByOwner.some(board => board.board_name === board_name);
+    if (nameBoard) throw HttpError(409, `The name: " ${board_name} " already exist`);
+
+    const body = { ...req.body, owner };
+    if (icon) body.icon = icon;
+    if (image) {
+        const prefixes = [`desktop_bg/${image}`, `tablet_bg/${image}`, `mobile_bg/${image}`];
+        const promises = prefixes.map(prefix =>
+            cloudinary.api.resources({
+                type: 'upload',
+                prefix: prefix,
+                max_results: 3,
+            })
+        );
+        const responses = await Promise.all(promises);
+        const [desktop, tablet, mobile] = responses.map(({ resources }) => resources[0]);
+        if (!desktop) throw HttpError(400, `The: " ${image} " property of background incorrect`);
+        const background = { desktop: desktop.url, tablet: tablet.url, mobile: mobile.url };
+        body.background = background;
+    }
+
+    const data = await boardServices.addBoard(body);
     res.status(201).json(data);
 };
+// ------------------------------------------------------------------------------
 
 export const updateBoard = async (req, res) => {
     const { _id: owner } = req.user;

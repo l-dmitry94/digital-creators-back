@@ -10,12 +10,12 @@ const boardSchema = new Schema(
         icon: {
             type: String,
             default: null,
-            required: [true, 'Board icon is required'],
+            // required: [true, 'Board icon is required'],
         },
         background: {
-            type: String,
+            type: Schema.Types.Mixed,
             default: null,
-            required: [true, 'Board background is required'],
+            // required: [true, 'Board background is required'],
         },
         owner: {
             type: Schema.Types.ObjectId,

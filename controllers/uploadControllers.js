@@ -18,7 +18,7 @@ export const getFolder = async (req, res, next) => {
 export const changeBackground = async (req, res, next) => {
     try {
         const { image } = req.query;
-        if (!image) throw HttpError(400);
+        // if (!image) throw HttpError(400);
         const prefixes = [`desktop_bg/${image}`, `tablet_bg/${image}`, `mobile_bg/${image}`];
         const promises = prefixes.map(prefix =>
             cloudinary.api.resources({
@@ -28,11 +28,19 @@ export const changeBackground = async (req, res, next) => {
             })
         );
 
-        const [a, b, c] = await Promise.all(promises);
-        const { resources: dekstop } = a;
-        const { resources: tablet } = b;
-        const { resources: mobile } = c;
-        res.json({ dekstop: dekstop[0], tablet: tablet[0], mobile: mobile[0] });
+        // const [a, b, c] = await Promise.all(promises);
+        // const { resources: dekstop } = a;
+        // const { resources: tablet } = b;
+        // const { resources: mobile } = c;
+        // res.json({ dekstop: dekstop[0], tablet: tablet[0], mobile: mobile[0] });
+        const responses = await Promise.all(promises);
+     
+        const [desktop, tablet, mobile] = responses.map(({ resources }) => resources[0])
+        // const [desktop, tablet, mobile] = resources;
+        res.json({ desktop, tablet, mobile });
+
+        // const [desktop, tablet, mobile] = resources;
+        res.json()
     } catch (error) {
         next(error);
     }
