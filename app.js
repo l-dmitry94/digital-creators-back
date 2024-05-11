@@ -41,8 +41,10 @@ app.use(async (err, req, res, next) => {
         message ===
             'Validation failed: password: Password must be at least 8 characters and contain at least one lowercase letter, one uppercase letter, and one digit'
     ) {
-        fs.promises.unlink(req.file.path);
-        await cloudinary.api.delete_resources(req.avatar);
+        if (req.file?.path) {
+            fs.promises.unlink(req.file.path);
+            await cloudinary.api.delete_resources(req.avatar);
+        }
     }
     res.status(status).json({ message });
 });
