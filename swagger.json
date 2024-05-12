@@ -22,6 +22,18 @@
         {
             "name": "User",
             "description": "Changing the background of boards"
+        },
+        {
+            "name": "Boards",
+            "description": "Interaction with boards"
+        },
+        {
+            "name": "Columns",
+            "description": "Interaction with columns"
+        },
+        {
+            "name" : "Cards",
+            "description" : "Interaction with cards"
         }
     ],
     "paths": {
@@ -195,11 +207,6 @@
                 "tags": ["Support"],
                 "summary": "Send message for getting support",
                 "parameters": [],
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -249,6 +256,7 @@
                         }
                     },
                     "401": {
+                        "type": "object",
                         "description": "Not authorized"
                     }
                 }
@@ -271,7 +279,7 @@
                         "required": true,
                         "schema": {
                             "type": "string"
-                        }, 
+                        },
                         "example": "water_surface"
                     }
                 ],
@@ -287,7 +295,423 @@
                         }
                     },
                     "400": {
+                        "type": "object",
                         "description": "Bad request (invalid parameter)"
+                    }
+                }
+            }
+        },
+        "/boards": {
+            "post": {
+                "tags": ["Boards"],
+                "summary": "Create boards",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BoardsRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Background image retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BoardsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "type": "object",
+                        "description": "Bad request (invalid values body)"
+                    }
+                }
+            },
+            "get": {
+                "tags": ["Boards"],
+                "summary": "Get all boards",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Getting all boards successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BoardsAllResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "type": "object",
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/boards/{id}": {
+            "patch": {
+                "tags": ["Boards"],
+                "summary": "Update board",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the folder",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BoardUpdateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Board succesfully updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BoardsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "type": "object",
+                        "description": "Not found"
+                    },
+                    "409": {
+                        "type": "object",
+                        "description": "Change board name"
+                    }
+                }
+            },
+            "get": {
+                "tags": ["Boards"],
+                "summary": "Get board",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the folder",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Info about current board",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BoardsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "type": "object",
+                        "description": "Not found"
+                    },
+                    "409": {
+                        "type": "object",
+                        "description": "Change board name"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Boards"],
+                "summary": "Delete board",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the folder",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Delete board succesfully"
+                    },
+                    "404": {
+                        "type": "object",
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/boards/{boardId}/columns": {
+            "post": {
+                "tags": ["Columns"],
+                "summary": "Create column",
+                "parameters": [
+                    {
+                        "name": "boardId",
+                        "in": "path",
+                        "description": "ID of board",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ColumnRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Column cteated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ColumnResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "type": "object",
+                        "description": "Bad request (invalid values body)"
+                    },
+                    "409": {
+                        "type": "object",
+                        "description": "Сolumn name in use"
+                    }
+                }
+            },
+            "get": {
+                "tags": ["Columns"],
+                "summary": "Get all columns",
+                "parameters": [
+                    {
+                        "name": "boardId",
+                        "in": "path",
+                        "description": "ID of board",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Getting all boards successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ColumnsAllResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "type": "object",
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/boards/{boardId}/columns/{id}": {
+            "patch": {
+                "tags": ["Columns"],
+                "summary": "Update column",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID column",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "boardId",
+                        "in": "path",
+                        "description": "ID board",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ColumnUpdateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Column succesfully updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ColumnResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "type": "object",
+                        "description": "Not found"
+                    },
+                    "409": {
+                        "type": "object",
+                        "description": "Change column name"
+                    }
+                }
+            },
+            "get": {
+                "tags": ["Columns"],
+                "summary": "Get column",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID column",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "boardId",
+                        "in": "path",
+                        "description": "ID board",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Info about current column",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ColumnResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "type": "object",
+                        "description": "Not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Columns"],
+                "summary": "Delete column",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID column",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "boardId",
+                        "in": "path",
+                        "description": "ID board",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Delete column succesfully"
+                    },
+                    "404": {
+                        "type": "object",
+                        "description": "Not found"
                     }
                 }
             }
@@ -554,7 +978,7 @@
                         "description": "URL of the background image for modile"
                     }
                 },
-                "example":{
+                "example": {
                     "dekstop": {
                         "asset_id": "139a3946ed2b50925f0742ee80248db1",
                         "public_id": "desktop_bg/water_surface",
@@ -612,6 +1036,267 @@
                             "updated_at": "2024-05-04T06:28:48+00:00"
                         }
                     }
+                }
+            },
+            "BoardsRequest": {
+                "type": "object",
+                "properties": {
+                    "board_name": {
+                        "type": "string",
+                        "description": "Board"
+                    },
+                    "icon": {
+                        "type": "string",
+                        "description": "icon name"
+                    },
+                    "background": {
+                        "type": "string",
+                        "description": "Background name"
+                    }
+                },
+                "example": {
+                    "board_name": "My project",
+                    "icon": "iconId1",
+                    "background": "default"
+                },
+                "required": ["board_name", "icon", "background"]
+            },
+            "BoardsResponse": {
+                "type": "object",
+                "properties": {
+                    "board_name": {
+                        "type": "string",
+                        "description": "Board name"
+                    },
+                    "icon": {
+                        "type": "string",
+                        "description": "Icon name"
+                    },
+                    "background": {
+                        "type": "string",
+                        "description": "Background name"
+                    },
+                    "owner": {
+                        "type": "string",
+                        "description": "ID of the board owner"
+                    },
+                    "_id": {
+                        "type": "string",
+                        "description": "Unique identifier of the board"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Date and time when the board was created (in ISO 8601 format)"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Date and time when the board was last updated (in ISO 8601 format)"
+                    }
+                },
+                "example": {
+                    "board_name": "My project",
+                    "icon": "iconId1",
+                    "background": "default",
+                    "owner": "663f8c814c8f596215cd610f",
+                    "_id": "663f9670649c23f6a9f06e72",
+                    "createdAt": "2024-05-11T16:01:52.506Z",
+                    "updatedAt": "2024-05-11T16:01:52.506Z"
+                }
+            },
+            "BoardsAllResponse": {
+                "type": "array",
+                "items": {
+                    "properties": {
+                        "_id": {
+                            "type": "string",
+                            "description": "Unique identifier of the board"
+                        },
+                        "board_name": {
+                            "type": "string",
+                            "description": "Name of the board"
+                        },
+                        "icon": {
+                            "type": "string",
+                            "description": "Identifier of the board icon"
+                        },
+                        "background": {
+                            "type": "string",
+                            "description": "Identifier of the board background"
+                        },
+                        "owner": {
+                            "type": "string",
+                            "description": "ID of the board owner"
+                        },
+                        "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Date and time when the board was created (in ISO 8601 format)"
+                        },
+                        "updatedAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Date and time when the board was last updated (in ISO 8601 format)"
+                        },
+                        "example": [
+                            {
+                                "_id": "663f89711f426f127ef480f7",
+                                "board_name": "Akvalon",
+                                "icon": "default",
+                                "background": "default",
+                                "owner": "663b3e3e10ef64a469f6cb85",
+                                "createdAt": "2024-05-11T15:06:25.216Z",
+                                "updatedAt": "2024-05-11T15:06:25.216Z"
+                            },
+                            {
+                                "_id": "663f9670649c23f6a9f06e72",
+                                "board_name": "My project",
+                                "icon": "iconId1",
+                                "background": "default",
+                                "owner": "663b3e3e10ef64a469f6cb85",
+                                "createdAt": "2024-05-11T16:01:52.506Z",
+                                "updatedAt": "2024-05-11T16:01:52.506Z"
+                            }
+                        ]
+                    }
+                }
+            },
+            "BoardUpdateRequest": {
+                "type": "object",
+                "properties": {
+                    "board_name": {
+                        "type": "string",
+                        "description": "Board"
+                    },
+                    "icon": {
+                        "type": "string",
+                        "description": "icon name"
+                    },
+                    "background": {
+                        "type": "string",
+                        "description": "Background name"
+                    }
+                },
+                "example": {
+                    "board_name": "My project",
+                    "icon": "iconId1",
+                    "background": "default"
+                }
+            },
+            "ColumnRequest": {
+                "type": "object",
+                "properties": {
+                    "column_name": {
+                        "type": "string",
+                        "description": "Column name"
+                    }
+                },
+                "required": [""],
+                "example": {
+                    "column_name": "To do"
+                }
+            },
+            "ColumnResponse": {
+                "type": "object",
+                "properties": {
+                    "column_name": {
+                        "type": "string",
+                        "description": "Column name"
+                    },
+                    "ref_board": {
+                        "type": "string",
+                        "description": "Board - owner  of column"
+                    },
+                    "owner": {
+                        "type": "string",
+                        "description": "ID of the user owner"
+                    },
+                    "_id": {
+                        "type": "string",
+                        "description": "Unique identifier of the board"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Date and time when the board was created (in ISO 8601 format)"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Date and time when the board was last updated (in ISO 8601 format)"
+                    }
+                },
+                "example": {
+                    "column_name": "To do",
+                    "owner": "663f8c814c8f596215cd610f",
+                    "ref_board": "663f89711f426f127ef480f7",
+                    "_id": "663f9670649c23f6a9f06e72",
+                    "createdAt": "2024-05-11T16:01:52.506Z",
+                    "updatedAt": "2024-05-11T16:01:52.506Z"
+                }
+            },
+            "ColumnsAllResponse": {
+                "type": "array",
+                "items": {
+                    "properties": {
+                        "_id": {
+                            "type": "string",
+                            "description": "Unique identifier of the column"
+                        },
+                        "culumn_name": {
+                            "type": "string",
+                            "description": "Name of the board"
+                        },
+                        "owner": {
+                            "type": "string",
+                            "description": "ID of the board owner"
+                        },
+                        "ref_board": {
+                            "type": "string",
+                            "description": "Board - owner  of column"
+                        },
+                        "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Date and time when the board was created (in ISO 8601 format)"
+                        },
+                        "updatedAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Date and time when the board was last updated (in ISO 8601 format)"
+                        },
+                        "example": [
+                            {
+                                "column_name": "To do",
+                                "owner": "663f8c814c8f596215cd610f",
+                                "ref_board": "663f89711f426f127ef480f7",
+                                "_id": "663f9670649c23f6a9f06e72",
+                                "createdAt": "2024-05-11T16:01:52.506Z",
+                                "updatedAt": "2024-05-11T16:01:52.506Z"
+                            },
+                            {
+                                "column_name": "In progress",
+                                "owner": "663f8c814c8f596215cd610f",
+                                "ref_board": "663f89711f426f127ef480f7",
+                                "_id": "663f9670649c23f6a9f06e72",
+                                "createdAt": "2024-05-11T16:01:52.506Z",
+                                "updatedAt": "2024-05-11T16:01:52.506Z"
+                            }
+                        ]
+                    }
+                }
+            },
+            "ColumnUpdateRequest": {
+                "type": "object",
+                "properties": {
+                    "column_name": {
+                        "type": "string",
+                        "description": "Board"
+                    }
+                },
+                "example": {
+                    "column_name": "Done"
                 }
             }
         },
