@@ -50,10 +50,19 @@ export const getCardById = async (req, res) => {
     res.json(data);
 };
 
+export const getAllCardsInBoard = async (req, res) => {
+    const { _id: owner } = req.user;
+    const { id } = req.params;
+    const data = await cardServices.getAllCards({ owner, ref_board: id });
+    if (!data) throw HttpError(404, 'Not found');
+    res.json(data);
+};
+
 export default {
     createCard: ctrlWrapper(createCard),
     updateCard: ctrlWrapper(updateCard),
     deleteCardById: ctrlWrapper(deleteCardById),
     getAllCards: ctrlWrapper(getAllCards),
     getCardById: ctrlWrapper(getCardById),
+    getAllCardsInBoard: ctrlWrapper(getAllCardsInBoard),
 };

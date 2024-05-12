@@ -14,5 +14,6 @@ cardRouter.patch('/:id', isValidId, validateBody(cardUpdateSchema), cardControll
 cardRouter.delete('/:id', isValidId, cardControllers.deleteCardById);
 cardRouter.get('/', cardControllers.getAllCards);
 cardRouter.get('/:id', isValidId, cardControllers.getCardById);
+cardRouter.get('/', isValidId, cardControllers.getAllCardsInBoard);
 
 export default cardRouter;
