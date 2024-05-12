@@ -5,17 +5,20 @@ const boardSchema = new Schema(
     {
         board_name: {
             type: String,
-            required: [true, 'Board name is required'],
+            required: [
+                function () {
+                    return this.isNew ? true : false;
+                },
+                'Board name is required',
+            ],
         },
         icon: {
             type: String,
             default: null,
-            // required: [true, 'Board icon is required'],
         },
         background: {
             type: Schema.Types.Mixed,
             default: null,
-            // required: [true, 'Board background is required'],
         },
         owner: {
             type: Schema.Types.ObjectId,
