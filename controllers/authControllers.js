@@ -95,14 +95,15 @@ const signin = async (req, res) => {
     });
 };
 
-
 const editProfile = async (req, res) => {
-
     const { username, email, password } = req.body;
 
     const { _id, avatar_id: oldAvatarId, password: passwordUser, email: emailUser, username: nameUser } = req.user;
 
     const user = await authServices.findUser({ email });
+    if (user && !req.file) {
+        throw HttpError(409, 'Email in use');
+    }
 
     if (user) {
         await fs.unlink(req.file.path);
@@ -153,7 +154,7 @@ const getCurrent = async (req, res) => {
     res.json({
         username,
         email,
-        avatarURL
+        avatarURL,
     });
 };
 

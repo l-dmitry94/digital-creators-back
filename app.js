@@ -13,6 +13,7 @@ import uploadsRouter from './routes/uploadsRouter.js';
 import boardRouter from './routes/boardRouter.js';
 import columnRouter from './routes/columnRouter.js';
 import cardRouter from './routes/cardRouter.js';
+import { emailError, passwordError } from './constants/avatar-constants.js';
 const { DB_HOST, PORT } = process.env;
 
 const app = express();
@@ -36,13 +37,11 @@ app.use((_, res) => {
 
 app.use(async (err, req, res, next) => {
     const { status = 500, message = 'Server error' } = err;
-    if (
-        message === 'Validation failed: email: Email is invalid' ||
-        message ===
-            'Validation failed: password: Password must be at least 8 characters and contain at least one lowercase letter, one uppercase letter, and one digit'
-    ) {
-        fs.promises.unlink(req.file.path);
-        await cloudinary.api.delete_resources(req.avatar);
+    if (message === emailError || message === passwordError) {
+        if (req.file?.path) {
+            fs.promises.unlink(req.file.path);
+            await cloudinary.api.delete_resources(req.avatar);
+        }
     }
     res.status(status).json({ message });
 });

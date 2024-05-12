@@ -1,12 +1,21 @@
 import boardServices from '../services/boardServices.js';
 import ctrlWrapper from '../decorators/ctrlWrapper.js';
 import HttpError from '../helpers/HttpError.js';
+import getBgImg from '../helpers/getBgImg.js';
 
 export const createBoard = async (req, res) => {
     const { _id: owner } = req.user;
-    const data = await boardServices.addBoard({ ...req.body, owner });
+    const { icon, board_name, background: image } = req.body;
+    const boardsByOwner = await boardServices.getAllBoards({ owner });
+    const nameBoard = boardsByOwner.some(board => board.board_name === board_name);
+    if (nameBoard) throw HttpError(409, `The name: " ${board_name} " already exist`);
+    const body = { ...req.body, owner };
+    if (icon) body.icon = icon;
+    if (image) body.background = await getBgImg(image);
+    const data = await boardServices.addBoard(body);
     res.status(201).json(data);
 };
+// ------------------------------------------------------------------------------
 
 export const updateBoard = async (req, res) => {
     const { _id: owner } = req.user;
