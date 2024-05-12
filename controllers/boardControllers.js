@@ -26,7 +26,7 @@ export const updateBoard = async (req, res) => {
     const body = { ...req.body, owner };
     if (board_name == '') body.board_name = oldBoard_name;
     if (icon) body.icon = icon;
-    if (image) body.background = await getBgImg(image);
+    body.background = image === 'default' ? 'default' : await getBgImg(image);
     const data = await boardServices.updateBoardByFilter({ owner, _id: id }, body);
     res.json(data);
 };
