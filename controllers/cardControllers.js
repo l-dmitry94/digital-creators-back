@@ -14,7 +14,7 @@ export const createCard = async (req, res) => {
 export const updateCard = async (req, res) => {
     const { _id: owner } = req.user;
     const { id } = req.params;
-    const { card_name: newName } = req.body?.card_name;
+    const newName = req.body?.card_name;
     if (newName) {
         const { card_name } = await cardServices.getCardByFilter({ owner, _id: id });
         if (!card_name) throw HttpError(404, 'Not found');
@@ -36,8 +36,8 @@ export const deleteCardById = async (req, res) => {
 export const getAllCards = async (req, res) => {
     const { _id: owner } = req.user;
     const baseUrl = req.baseUrl.split('/');
-    const ref_column = baseUrl[5];
-    const data = await cardServices.getAllCards({ owner, ref_column });
+    const ref_board = baseUrl[3];
+    const data = await cardServices.getAllCards({ owner, ref_board });
     if (!data) throw HttpError(404, 'Not found');
     res.json(data);
 };
