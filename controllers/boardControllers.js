@@ -10,7 +10,7 @@ export const createBoard = async (req, res) => {
     await validateBoardName(owner, board_name);
     const body = { ...req.body, owner };
     if (icon) body.icon = icon;
-    if (image) body.background = await getBgImg(image);
+    body.background = image === 'default' ? 'default' : await getBgImg(image);
     const data = await boardServices.addBoard(body);
     res.status(201).json(data);
 };
