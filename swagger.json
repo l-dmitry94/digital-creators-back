@@ -32,8 +32,8 @@
             "description": "Interaction with columns"
         },
         {
-            "name" : "Cards",
-            "description" : "Interaction with cards"
+            "name": "Cards",
+            "description": "Interaction with cards"
         }
     ],
     "paths": {
@@ -715,6 +715,279 @@
                     }
                 }
             }
+        },
+        "/boards/{boardId}/columns/{columnId}/cards": {
+            "post": {
+                "tags": ["Cards"],
+                "summary": "Create card",
+                "parameters": [
+                    {
+                        "name": "columnId",
+                        "in": "path",
+                        "description": "ID column",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "boardId",
+                        "in": "path",
+                        "description": "ID board",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CardRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Card created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CardResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "type": "object",
+                        "description": "Bad request (invalid values body)"
+                    }
+                }
+            },
+            "get": {
+                "tags": ["Cards"],
+                "summary": "Get all cards",
+                "parameters": [
+                    {
+                        "name": "columnId",
+                        "in": "path",
+                        "description": "ID column",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "boardId",
+                        "in": "path",
+                        "description": "ID board",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Getting all cards successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CardsAllResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "type": "object",
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/boards/{boardId}/columns/{columnId}/cards/{id}": {
+            "patch": {
+                "tags": ["Cards"],
+                "summary": "Update card",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID card",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "boardId",
+                        "in": "path",
+                        "description": "ID board",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "columnId",
+                        "in": "path",
+                        "description": "ID column",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CardUpdateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Card succesfully updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CardResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "type": "object",
+                        "description": "Not found"
+                    },
+                    "409": {
+                        "type": "object",
+                        "description": "Change card name"
+                    }
+                }
+            },
+            "get": {
+                "tags": ["Cards"],
+                "summary": "Get card",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID card",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "boardId",
+                        "in": "path",
+                        "description": "ID board",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "columnId",
+                        "in": "path",
+                        "description": "ID column",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Info about current card",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CardResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "type": "object",
+                        "description": "Not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Cards"],
+                "summary": "Delete card",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID card",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "boardId",
+                        "in": "path",
+                        "description": "ID board",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "columnId",
+                        "in": "path",
+                        "description": "ID column",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Delete card succesfully"
+                    },
+                    "404": {
+                        "type": "object",
+                        "description": "Not found"
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -1242,48 +1515,37 @@
                     "properties": {
                         "_id": {
                             "type": "string",
-                            "description": "Unique identifier of the column"
+                            "description": "Unique identifier of the column",
+                            "example": "663b3e3e10ef64a469f6cb85"
                         },
-                        "culumn_name": {
+                        "column_name": {
                             "type": "string",
-                            "description": "Name of the board"
+                            "description": "Name of the board",
+                            "example" : "To do"
+
                         },
                         "owner": {
                             "type": "string",
-                            "description": "ID of the board owner"
+                            "description": "ID of the board owner",
+                            "example" : "663f89711f426f127ef480f7"
                         },
                         "ref_board": {
                             "type": "string",
-                            "description": "Board - owner  of column"
+                            "description": "Board - owner  of column",
+                            "example": "663f9670649c23f6a9f06e72"
                         },
                         "createdAt": {
                             "type": "string",
                             "format": "date-time",
-                            "description": "Date and time when the board was created (in ISO 8601 format)"
+                            "description": "Date and time when the board was created (in ISO 8601 format)",
+                            "example": "2024-05-11T16:01:52.506Z"
                         },
                         "updatedAt": {
                             "type": "string",
                             "format": "date-time",
-                            "description": "Date and time when the board was last updated (in ISO 8601 format)"
-                        },
-                        "example": [
-                            {
-                                "column_name": "To do",
-                                "owner": "663f8c814c8f596215cd610f",
-                                "ref_board": "663f89711f426f127ef480f7",
-                                "_id": "663f9670649c23f6a9f06e72",
-                                "createdAt": "2024-05-11T16:01:52.506Z",
-                                "updatedAt": "2024-05-11T16:01:52.506Z"
-                            },
-                            {
-                                "column_name": "In progress",
-                                "owner": "663f8c814c8f596215cd610f",
-                                "ref_board": "663f89711f426f127ef480f7",
-                                "_id": "663f9670649c23f6a9f06e72",
-                                "createdAt": "2024-05-11T16:01:52.506Z",
-                                "updatedAt": "2024-05-11T16:01:52.506Z"
-                            }
-                        ]
+                            "description": "Date and time when the board was last updated (in ISO 8601 format)",
+                            "example": "2024-05-12T08:43:11.497Z"
+                        }
                     }
                 }
             },
@@ -1297,6 +1559,178 @@
                 },
                 "example": {
                     "column_name": "Done"
+                }
+            },
+            "CardRequest": {
+                "type": "object",
+                "properties": {
+                    "card_name": {
+                        "type": "string",
+                        "description": "Card name",
+                        "example": "Task Card",
+                        "required": true
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Description of the card",
+                        "example": "This is a task card for project management"
+                    },
+                    "priority": {
+                        "type": "string",
+                        "description": "Priority level of the card",
+                        "example": "High",
+                        "required": true
+                    },
+                    "deadline": {
+                        "type": "string",
+                        "description": "Deadline for the card (format: YYYY-MM-DD)",
+                        "example": "2024-06-30",
+                        "required": true
+                    }
+                }
+            },
+            "CardResponse" : {
+                "type": "object",
+                "properties": {
+                    "card_name": {
+                        "type": "string",
+                        "description": "Card name",
+                        "example": "Task Card"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Description of the card",
+                        "example": "This is a task card for project management"
+                    },
+                    "priority": {
+                        "type": "string",
+                        "description": "Priority level of the card",
+                        "example": "High"
+                    },
+                    "deadline": {
+                        "type": "string",
+                        "description": "Deadline for the card (format: YYYY-MM-DD)",
+                        "example": "2024-06-30"
+                    },
+                    "ref_column": {
+                        "type": "string",
+                        "description": "Reference to the column identifier",
+                        "example": "663f9670649c23f6a9f06e72"
+                    },
+                    "ref_board": {
+                        "type": "string",
+                        "description": "Reference to the board identifier",
+                        "example": "663f89711f426f127ef480f7"
+                    },
+                    "owner": {
+                        "type": "string",
+                        "description": "ID of the card owner",
+                        "example": "663b3e3e10ef64a469f6cb85"
+                    },
+                    "_id": {
+                        "type": "string",
+                        "description": "Unique identifier of the card",
+                        "example": "6640811f58b5242ec0ba191a"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Date and time when the card was created (in ISO 8601 format)",
+                        "example": "2024-05-12T08:43:11.497Z"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Date and time when the card was last updated (in ISO 8601 format)",
+                        "example": "2024-05-12T08:43:11.497Z"
+                    }
+                }
+            },
+            "CardsAllResponse" : {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "card_name": {
+                            "type": "string",
+                            "description": "Card name"
+                        },
+                        "description": {
+                            "type": "string",
+                            "description": "Description of the card"
+                        },
+                        "priority": {
+                            "type": "string",
+                            "description": "Priority level of the card"
+                        },
+                        "deadline": {
+                            "type": "string",
+                            "description": "Deadline for the card (format: YYYY-MM-DD)"
+                        },
+                        "ref_column": {
+                            "type": "string",
+                            "description": "Reference to the column identifier"
+                        },
+                        "ref_board": {
+                            "type": "string",
+                            "description": "Reference to the board identifier"
+                        },
+                        "owner": {
+                            "type": "string",
+                            "description": "ID of the card owner"
+                        },
+                        "_id": {
+                            "type": "string",
+                            "description": "Unique identifier of the card"
+                        },
+                        "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Date and time when the card was created (in ISO 8601 format)"
+                        },
+                        "updatedAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Date and time when the card was last updated (in ISO 8601 format)"
+                        }
+                    },
+                    "example": {
+                        "card_name": "Task Card",
+                        "description": "This is a task card for project management",
+                        "priority": "High",
+                        "deadline": "2024-06-30",
+                        "ref_column": "663f9670649c23f6a9f06e72",
+                        "ref_board": "663f89711f426f127ef480f7",
+                        "owner": "663b3e3e10ef64a469f6cb85",
+                        "_id": "6640811f58b5242ec0ba191a",
+                        "createdAt": "2024-05-12T08:43:11.497Z",
+                        "updatedAt": "2024-05-12T08:43:11.497Z"
+                    }
+                }
+            },
+            "CardUpdateRequest": {
+                "type": "object",
+                "properties": {
+                    "card_name": {
+                        "type": "string",
+                        "description": "Card name",
+                        "example": "Task Card"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Description of the card",
+                        "example": "This is a task card for project management"
+                    },
+                    "priority": {
+                        "type": "string",
+                        "description": "Priority level of the card",
+                        "example": "High"
+                    },
+                    "deadline": {
+                        "type": "string",
+                        "description": "Deadline for the card (format: YYYY-MM-DD)",
+                        "example": "2024-06-30"
+                    }
                 }
             }
         },
