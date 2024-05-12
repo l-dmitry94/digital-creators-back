@@ -13,3 +13,7 @@ export const cardUpdateSchema = Joi.object({
     priority: Joi.string(),
     deadline: Joi.string(),
 });
+export const cardColumUpdateSchema = Joi.object({
+    card_id: Joi.string(),
+    newColumn: Joi.string()
+})

@@ -15,4 +15,5 @@ columnRouter.delete('/:id', isValidId, columnControllers.deleteColumnById);
 columnRouter.get('/', columnControllers.getAllColumns);
 columnRouter.get('/:id', isValidId, columnControllers.getColumnById);
 
+
 export default columnRouter;
