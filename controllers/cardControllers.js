@@ -36,8 +36,8 @@ export const deleteCardById = async (req, res) => {
 export const getAllCards = async (req, res) => {
     const { _id: owner } = req.user;
     const baseUrl = req.baseUrl.split('/');
-    const ref_column = baseUrl[5];
-    const data = await cardServices.getAllCards({ owner, ref_column });
+    const ref_board = baseUrl[3];
+    const data = await cardServices.getAllCards({ owner, ref_board });
     if (!data) throw HttpError(404, 'Not found');
     res.json(data);
 };
