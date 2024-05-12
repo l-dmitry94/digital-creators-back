@@ -2,13 +2,12 @@ import boardServices from '../services/boardServices.js';
 import ctrlWrapper from '../decorators/ctrlWrapper.js';
 import HttpError from '../helpers/HttpError.js';
 import getBgImg from '../helpers/getBgImg.js';
+import validateBoardName from '../helpers/validateBoardName.js';
 
 export const createBoard = async (req, res) => {
     const { _id: owner } = req.user;
     const { icon, board_name, background: image } = req.body;
-    const boardsByOwner = await boardServices.getAllBoards({ owner });
-    const nameBoard = boardsByOwner.some(board => board.board_name === board_name);
-    if (nameBoard) throw HttpError(409, `The name: " ${board_name} " already exist`);
+    await validateBoardName(owner, board_name);
     const body = { ...req.body, owner };
     if (icon) body.icon = icon;
     if (image) body.background = await getBgImg(image);
@@ -20,17 +19,17 @@ export const createBoard = async (req, res) => {
 export const updateBoard = async (req, res) => {
     const { _id: owner } = req.user;
     const { id } = req.params;
-    const newName = req.body?.board_name;
-    if (newName) {
-        const { board_name } = await boardServices.getBoardByFilter({ owner, _id: id });
-        if (!board_name) throw HttpError(404, 'Not found');
-        if (board_name === newName) throw HttpError(409, 'Change board name');
-    }
-    const data = await boardServices.updateBoardByFilter({ owner, _id: id }, req.body);
-    if (!data) throw HttpError(404, 'Not found');
+    const { icon, board_name, background: image } = req.body;
+    const isBoardExist = await boardServices.getBoardByFilter({ owner, _id: id });
+    if (!isBoardExist) throw HttpError(404, 'Board not  found');
+    await validateBoardName(owner, board_name);
+    const body = { ...req.body, owner };
+    if (icon) body.icon = icon;
+    if (image) body.background = await getBgImg(image);
+    const data = await boardServices.updateBoardByFilter({ owner, _id: id }, body);
     res.json(data);
 };
-
+//--------------------------------------------------------------------------------
 export const deleteBoardById = async (req, res) => {
     const { id } = req.params;
     const { _id: owner } = req.user;
