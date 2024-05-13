@@ -167,7 +167,7 @@ const logout = async (req, res) => {
 const supportSendEmail = async (req, res) => {
     const { email, value } = req.body;
 
-    const supportEmail = 'orellesha9@gmail.com';
+    const supportEmail = 'taskpro.project@gmail.com';
 
     const user = await authServices.findUser({ email });
 
