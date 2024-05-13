@@ -10,5 +10,5 @@ export const boardUpdateSchema = Joi.object({
     board_name: Joi.string().optional().empty(''),
     icon: Joi.string().allow(null).optional(),
     background: Joi.string().allow(null).optional(),
-    image: Joi.string().optional().empty("")
+    image: Joi.string().optional().empty(''),
 });

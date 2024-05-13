@@ -4,9 +4,15 @@ import cardServices from '../services/cardServices.js';
 
 export const createCard = async (req, res) => {
     const { _id: owner } = req.user;
+    const { card_name } = req.body;
     const baseUrl = req.baseUrl.split('/');
     const ref_board = baseUrl[3];
     const ref_column = baseUrl[5];
+    const isRefExist = await cardServices.getCardByFilter({ owner, ref_board, ref_column });
+    if (!isRefExist) throw HttpError(404, 'Card not  found');
+    const cardsByOwner = await cardServices.getAllCards({ owner });
+    const nameCard = cardsByOwner.some(card => card.card_name === card_name);
+    if (nameCard) throw HttpError(409, `The name: " ${card_name} " already exist`);
     const data = await cardServices.addCard({ ...req.body, ref_column, ref_board, owner });
     res.status(201).json(data);
 };
@@ -14,14 +20,21 @@ export const createCard = async (req, res) => {
 export const updateCard = async (req, res) => {
     const { _id: owner } = req.user;
     const { id } = req.params;
-    const newName = req.body?.card_name;
-    if (newName) {
-        const { card_name } = await cardServices.getCardByFilter({ owner, _id: id });
-        if (!card_name) throw HttpError(404, 'Not found');
-        if (card_name === newName) throw HttpError(409, 'Change card name');
+    const { card_name } = req.body;
+    // const newName = req.body?.card_name;
+    // if (newName) {
+    //     const { card_name } = await cardServices.getCardByFilter({ owner, _id: id });
+    //     if (!card_name) throw HttpError(404, 'Not found');
+    //     if (card_name === newName) throw HttpError(409, 'Change card name');
+    // }
+    const isCardExist = await cardServices.getCardByFilter({ owner, _id: id });
+    if (!isCardExist) throw HttpError(404, 'Card not  found');
+    if (isCardExist.card_name !== card_name) {
+        const cardsByOwner = await cardServices.getAllCards({ owner });
+        const nameCard = cardsByOwner.some(card => card.card_name === card_name);
+        if (nameCard) throw HttpError(409, `The name: " ${card_name} " already exist`);
     }
     const data = await cardServices.updateCardByFilter({ owner, _id: id }, req.body);
-    if (!data) throw HttpError(404, 'Not found');
     res.json(data);
 };
 
