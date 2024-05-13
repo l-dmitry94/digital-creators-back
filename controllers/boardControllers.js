@@ -17,14 +17,16 @@ export const createBoard = async (req, res) => {
 // ------------------------------------------------------------------------------
 
 export const updateBoard = async (req, res) => {
-    const { _id: owner, board_name: oldBoard_name } = req.user;
+    const { _id: owner } = req.user;
     const { id } = req.params;
     const { icon, board_name, background: image } = req.body;
     const isBoardExist = await boardServices.getBoardByFilter({ owner, _id: id });
     if (!isBoardExist) throw HttpError(404, 'Board not  found');
+    if (isBoardExist.board_name !== board_name) {
+    }
     await validateBoardName(owner, board_name);
-    const body = { ...req.body, owner };
-    if (board_name == '') body.board_name = oldBoard_name;
+    const body = { ...req.body, owner, image };
+    if (board_name == '') body.board_name = isBoardExist.board_name;
     if (icon) body.icon = icon;
     body.background = image === 'default' ? 'default' : await getBgImg(image);
     const data = await boardServices.updateBoardByFilter({ owner, _id: id }, body);
