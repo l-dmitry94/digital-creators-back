@@ -20,6 +20,7 @@ const boardSchema = new Schema(
             type: Schema.Types.Mixed,
             default: null,
         },
+        image: { type: String },
         owner: {
             type: Schema.Types.ObjectId,
             ref: 'user',
