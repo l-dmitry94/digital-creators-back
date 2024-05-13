@@ -18,7 +18,7 @@ export const updateCard = async (req, res) => {
     if (newName) {
         const { card_name } = await cardServices.getCardByFilter({ owner, _id: id });
         if (!card_name) throw HttpError(404, 'Not found');
-        if (card_name === newName) throw HttpError(409, 'Change card name');
+        // if (card_name === newName) throw HttpError(409, 'Change card name');
     }
     const data = await cardServices.updateCardByFilter({ owner, _id: id }, req.body);
     if (!data) throw HttpError(404, 'Not found');
