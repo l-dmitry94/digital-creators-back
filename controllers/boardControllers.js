@@ -3,6 +3,8 @@ import ctrlWrapper from '../decorators/ctrlWrapper.js';
 import HttpError from '../helpers/HttpError.js';
 import getBgImg from '../helpers/getBgImg.js';
 import validateBoardName from '../helpers/validateBoardName.js';
+import cardServices from '../services/cardServices.js';
+import columnServices from '../services/columnServices.js';
 
 export const createBoard = async (req, res) => {
     const { _id: owner } = req.user;
@@ -38,6 +40,8 @@ export const deleteBoardById = async (req, res) => {
     const { _id: owner } = req.user;
     const data = await boardServices.removeBoardByFilter({ owner, _id: id });
     if (!data) throw HttpError(404, 'Not found');
+    await cardServices.removeAllCardsInBoards({ ref_board: id });
+    await columnServices.removeAllColumnsInBoard({ ref_board: id });
     res.status(204).send();
 };
 
