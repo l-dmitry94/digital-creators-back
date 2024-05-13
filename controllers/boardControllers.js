@@ -40,8 +40,8 @@ export const deleteBoardById = async (req, res) => {
     const { _id: owner } = req.user;
     const data = await boardServices.removeBoardByFilter({ owner, _id: id });
     if (!data) throw HttpError(404, 'Not found');
-    await cardServices.removeAllCardsInBoards({ ref_board: id });
-    await columnServices.removeAllColumnsInBoard({ ref_board: id });
+    await cardServices.removeAllCardsInBoards({ owner, ref_board: id });
+    await columnServices.removeAllColumnsInBoard({ owner, ref_board: id });
     res.status(204).send();
 };
 
