@@ -13,7 +13,7 @@ const getBgImg = async image => {
     const responses = await Promise.all(promises);
     const [desktop, tablet, mobile] = responses.map(({ resources }) => resources[0]);
     if (!desktop) throw HttpError(400, `The: " ${image} " property of background incorrect`);
-    const background = { desktop: desktop.url, tablet: tablet.url, mobile: mobile.url };
+    const background = { desktop: desktop.secure_url, tablet: tablet.secure_url, mobile: mobile.secure_url };
     return background;
 };
 
