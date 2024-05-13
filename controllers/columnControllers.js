@@ -16,14 +16,23 @@ export const createColumn = async (req, res) => {
 export const updateColumn = async (req, res) => {
     const { _id: owner } = req.user;
     const { id } = req.params;
-    const newName = req.body?.column_name;
-    if (newName) {
-        const { column_name } = await columnServices.getColumnByFilter({ owner, _id: id });
-        if (!column_name) throw HttpError(404, 'Not found');
-        if (column_name === newName) throw HttpError(409, 'Change column name');
+    const { column_name } = req.body;
+    // const newName = req.body?.column_name;
+    // if (newName) {
+    //     const { column_name } = await columnServices.getColumnByFilter({ owner, _id: id });
+    //     if (!column_name) throw HttpError(404, 'Not found');
+    //     if (column_name === newName) throw HttpError(409, 'Change column name');
+    // }
+    // ------------------
+    const isColumnExist = await columnServices.getColumnByFilter({ owner, _id: id });
+    if (!isColumnExist) throw HttpError(404, 'Column not  found');
+    if (isColumnExist.column_name !== column_name) {
+        const columnsByOwner = await columnServices.getAllColumns({ owner });
+        const nameColumn = columnsByOwner.some(column => column.column_name === column_name);
+        if (nameColumn) throw HttpError(409, `The name: " ${column_name} " already exist`);
     }
+    // -------------------
     const data = await columnServices.updateColumnByFilter({ owner, _id: id }, req.body);
-    if (!data) throw HttpError(404, 'Not found');
     res.json(data);
 };
 

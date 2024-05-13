@@ -14,11 +14,13 @@ export const createCard = async (req, res) => {
 export const updateCard = async (req, res) => {
     const { _id: owner } = req.user;
     const { id } = req.params;
-    const newName = req.body?.card_name;
-    if (newName) {
-        const { card_name } = await cardServices.getCardByFilter({ owner, _id: id });
-        if (!card_name) throw HttpError(404, 'Not found');
-        // if (card_name === newName) throw HttpError(409, 'Change card name');
+    const { card_name } = req.body;
+    const isCardExist = await cardServices.getCardByFilter({ owner, _id: id });
+    if (!isCardExist) throw HttpError(404, 'Card not  found');
+    if (isCardExist.card_name !== card_name) {
+        const cardsByOwner = await cardServices.getAllCards({ owner });
+        const nameCard = cardsByOwner.some(card => card.card_name === card_name);
+        if (nameCard) throw HttpError(409, `The name: " ${card_name} " already exist`);
     }
     const data = await cardServices.updateCardByFilter({ owner, _id: id }, req.body);
     if (!data) throw HttpError(404, 'Not found');
@@ -51,8 +53,8 @@ export const getCardById = async (req, res) => {
 };
 export const changeCardColumnById = async (req, res) => {
     const { _id: owner } = req.user;
-    const { card_id, newColumn  } = req.body;
-    const data = await cardServices.updateCardByFilter({ owner, _id: card_id},{ref_column:newColumn});
+    const { card_id, newColumn } = req.body;
+    const data = await cardServices.updateCardByFilter({ owner, _id: card_id }, { ref_column: newColumn });
     if (!data) throw HttpError(404, 'Not found');
     res.json(data);
 };
