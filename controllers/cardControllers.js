@@ -51,6 +51,13 @@ export const getCardById = async (req, res) => {
     if (!data) throw HttpError(404, 'Not found');
     res.json(data);
 };
+export const changeCardColumnById = async (req, res) => {
+    const { _id: owner } = req.user;
+    const { card_id, newColumn } = req.body;
+    const data = await cardServices.updateCardByFilter({ owner, _id: card_id }, { ref_column: newColumn });
+    if (!data) throw HttpError(404, 'Not found');
+    res.json(data);
+};
 
 export default {
     createCard: ctrlWrapper(createCard),
@@ -58,4 +65,5 @@ export default {
     deleteCardById: ctrlWrapper(deleteCardById),
     getAllCards: ctrlWrapper(getAllCards),
     getCardById: ctrlWrapper(getCardById),
+    changeCardColumnById: ctrlWrapper(changeCardColumnById),
 };

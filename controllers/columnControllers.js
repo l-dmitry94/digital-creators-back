@@ -61,10 +61,13 @@ export const getColumnById = async (req, res) => {
     res.json(data);
 };
 
+
+
 export default {
     createColumn: ctrlWrapper(createColumn),
     updateColumn: ctrlWrapper(updateColumn),
     deleteColumnById: ctrlWrapper(deleteColumnById),
     getAllColumns: ctrlWrapper(getAllColumns),
     getColumnById: ctrlWrapper(getColumnById),
+   
 };
