@@ -23,8 +23,8 @@ export const updateBoard = async (req, res) => {
     const isBoardExist = await boardServices.getBoardByFilter({ owner, _id: id });
     if (!isBoardExist) throw HttpError(404, 'Board not  found');
     if (isBoardExist.board_name !== board_name) {
+        await validateBoardName(owner, board_name);
     }
-    await validateBoardName(owner, board_name);
     const body = { ...req.body, owner, image };
     if (board_name == '') body.board_name = isBoardExist.board_name;
     if (icon) body.icon = icon;
