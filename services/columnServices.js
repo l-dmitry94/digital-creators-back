@@ -18,4 +18,5 @@ export default {
     removeColumnByFilter,
     getAllColumns,
     getColumnByFilter,
+    removeAllColumnsInBoard,
 };
