@@ -262,45 +262,6 @@
                 }
             }
         },
-        "/user/background": {
-            "patch": {
-                "tags": ["User"],
-                "summary": "Get Background Image",
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "image",
-                        "in": "query",
-                        "description": "Image name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "water_surface"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Background image retrieved successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/BackgroundImageResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "type": "object",
-                        "description": "Bad request (invalid parameter)"
-                    }
-                }
-            }
-        },
         "/boards": {
             "post": {
                 "tags": ["Boards"],
