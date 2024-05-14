@@ -18,4 +18,5 @@ export default {
     removeCardByFilter,
     getCardByFilter,
     getAllCards,
+    removeAllCardsInBoards,
 };
