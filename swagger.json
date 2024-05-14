@@ -406,11 +406,7 @@
                     },
                     "404": {
                         "type": "object",
-                        "description": "Not found"
-                    },
-                    "409": {
-                        "type": "object",
-                        "description": "Change board name"
+                        "description": "Board not  found"
                     }
                 }
             },
@@ -556,7 +552,7 @@
                 ],
                 "responses": {
                     "201": {
-                        "description": "Getting all boards successfully",
+                        "description": "Getting all columns successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -628,7 +624,7 @@
                     },
                     "409": {
                         "type": "object",
-                        "description": "Change column name"
+                        "description": "The name: column_name already exist"
                     }
                 }
             },
@@ -883,7 +879,7 @@
                     },
                     "409": {
                         "type": "object",
-                        "description": "Change card name"
+                        "description": "The name: card_name already exist"
                     }
                 }
             },
@@ -1206,176 +1202,92 @@
                 },
                 "required": ["email"]
             },
-            "UploadBackgroundsResponse": {
-                "type": "object",
-                "properties": {
-                    "resources": [{}, {}]
-                },
-                "example": {
-                    "resources": [
-                        {
-                            "asset_id": "ccad7972e4e47aaea55746d515491266",
-                            "public_id": "mobile_bg/balloon",
-                            "format": "jpg",
-                            "version": "1714735011",
-                            "resource_type": "image",
-                            "type": "upload",
-                            "created_at": "2024-05-03T11:16:51Z",
-                            "bytes": "42280",
-                            "width": "375",
-                            "height": "812",
-                            "folder": "mobile_bg",
-                            "url": "http://res.cloudinary.com/dozbtab7q/image/upload/v1714735011/mobile_bg/balloon.jpg",
-                            "secure_url": "https://res.cloudinary.com/dozbtab7q/image/upload/v1714735011/mobile_bg/balloon.jpg",
-                            "last_updated": {
-                                "public_id_updated_at": "2024-05-04T06:12:39+00:00",
-                                "updated_at": "2024-05-04T06:12:39+00:00"
-                            }
-                        }
-                    ]
-                }
-            },
-            "BackgroundImageResponse": {
-                "type": "object",
-                "properties": {
-                    "dekstop": {
-                        "type": "object",
-                        "description": "URL of the background image for dekstop"
-                    },
-                    "tablet": {
-                        "type": "object",
-                        "description": "URL of the background image for tablet"
-                    },
-                    "mobile": {
-                        "type": "object",
-                        "description": "URL of the background image for modile"
-                    }
-                },
-                "example": {
-                    "dekstop": {
-                        "asset_id": "139a3946ed2b50925f0742ee80248db1",
-                        "public_id": "desktop_bg/water_surface",
-                        "format": "jpg",
-                        "version": 1714735102,
-                        "resource_type": "image",
-                        "type": "upload",
-                        "created_at": "2024-05-03T11:18:22Z",
-                        "bytes": 42070,
-                        "width": 1180,
-                        "height": 770,
-                        "folder": "desktop_bg",
-                        "url": "http://res.cloudinary.com/dozbtab7q/image/upload/v1714735102/desktop_bg/water_surface.jpg",
-                        "secure_url": "https://res.cloudinary.com/dozbtab7q/image/upload/v1714735102/desktop_bg/water_surface.jpg",
-                        "last_updated": {
-                            "public_id_updated_at": "2024-05-04T06:28:53+00:00",
-                            "updated_at": "2024-05-04T06:28:53+00:00"
-                        }
-                    },
-                    "tablet": {
-                        "asset_id": "6758befbff14418bf3ba8bd43e948d51",
-                        "public_id": "tablet_bg/water_surface",
-                        "format": "jpg",
-                        "version": 1714735052,
-                        "resource_type": "image",
-                        "type": "upload",
-                        "created_at": "2024-05-03T11:17:32Z",
-                        "bytes": 42837,
-                        "width": 768,
-                        "height": 956,
-                        "folder": "tablet_bg",
-                        "url": "http://res.cloudinary.com/dozbtab7q/image/upload/v1714735052/tablet_bg/water_surface.jpg",
-                        "secure_url": "https://res.cloudinary.com/dozbtab7q/image/upload/v1714735052/tablet_bg/water_surface.jpg",
-                        "last_updated": {
-                            "public_id_updated_at": "2024-05-04T06:28:47+00:00",
-                            "updated_at": "2024-05-04T06:28:47+00:00"
-                        }
-                    },
-                    "mobile": {
-                        "asset_id": "19d2418eef988af65cc538c392fba9f1",
-                        "public_id": "mobile_bg/water_surface",
-                        "format": "jpg",
-                        "version": 1714735012,
-                        "resource_type": "image",
-                        "type": "upload",
-                        "created_at": "2024-05-03T11:16:52Z",
-                        "bytes": 20918,
-                        "width": 375,
-                        "height": 812,
-                        "folder": "mobile_bg",
-                        "url": "http://res.cloudinary.com/dozbtab7q/image/upload/v1714735012/mobile_bg/water_surface.jpg",
-                        "secure_url": "https://res.cloudinary.com/dozbtab7q/image/upload/v1714735012/mobile_bg/water_surface.jpg",
-                        "last_updated": {
-                            "public_id_updated_at": "2024-05-04T06:28:48+00:00",
-                            "updated_at": "2024-05-04T06:28:48+00:00"
-                        }
-                    }
-                }
-            },
             "BoardsRequest": {
                 "type": "object",
                 "properties": {
                     "board_name": {
                         "type": "string",
-                        "description": "Board"
+                        "description": "Name of board"
                     },
                     "icon": {
-                        "type": "string",
-                        "description": "icon name"
+                        "type": ["string", "null"],
+                        "description": "Icon name",
+                        "default": null
                     },
                     "background": {
-                        "type": "string",
-                        "description": "Background name"
+                        "type": ["string", "null"],
+                        "description": "Name of background",
+                        "default": null
                     }
                 },
                 "example": {
-                    "board_name": "My project",
+                    "board_name": "Мій проект",
                     "icon": "iconId1",
-                    "background": "default"
+                    "background": "blue_lagoon"
                 },
-                "required": ["board_name", "icon", "background"]
+                "required": ["board_name"]
             },
             "BoardsResponse": {
                 "type": "object",
                 "properties": {
-                    "board_name": {
+                  "board_name": {
+                    "type": "string",
+                    "description": "Name of the board"
+                  },
+                  "icon": {
+                    "type": "string",
+                    "description": "Icon name"
+                  },
+                  "background": {
+                    "type": "object",
+                    "properties": {
+                      "desktop": {
                         "type": "string",
-                        "description": "Board name"
+                        "description": "Link to the desktop background"
+                      },
+                      "tablet": {
+                        "type": "string",
+                        "description": "Link to the tablet background"
+                      },
+                      "mobile": {
+                        "type": "string",
+                        "description": "Link to the mobile background"
+                      }
                     },
-                    "icon": {
-                        "type": "string",
-                        "description": "Icon name"
-                    },
-                    "background": {
-                        "type": "string",
-                        "description": "Background name"
-                    },
-                    "owner": {
-                        "type": "string",
-                        "description": "ID of the board owner"
-                    },
-                    "_id": {
-                        "type": "string",
-                        "description": "Unique identifier of the board"
-                    },
-                    "createdAt": {
-                        "type": "string",
-                        "format": "date-time",
-                        "description": "Date and time when the board was created (in ISO 8601 format)"
-                    },
-                    "updatedAt": {
-                        "type": "string",
-                        "format": "date-time",
-                        "description": "Date and time when the board was last updated (in ISO 8601 format)"
-                    }
+                    "description": "Information about backgrounds for different devices"
+                  },
+                  "owner": {
+                    "type": "string",
+                    "description": "Owner's identifier of the board"
+                  },
+                  "_id": {
+                    "type": "string",
+                    "description": "Unique identifier of the board"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date and time when the board was created"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date and time when the board was last updated"
+                  }
                 },
+                "required": ["board_name", "icon", "background", "owner", "_id", "createdAt", "updatedAt"],
                 "example": {
-                    "board_name": "My project",
-                    "icon": "iconId1",
-                    "background": "default",
-                    "owner": "663f8c814c8f596215cd610f",
-                    "_id": "663f9670649c23f6a9f06e72",
-                    "createdAt": "2024-05-11T16:01:52.506Z",
-                    "updatedAt": "2024-05-11T16:01:52.506Z"
+                  "board_name": "My project",
+                  "icon": "iconId1",
+                  "background": {
+                    "desktop": "https://res.cloudinary.com/dozbtab7q/image/upload/v1714735112/desktop_bg/blue_lagoon.jpg",
+                    "tablet": "https://res.cloudinary.com/dozbtab7q/image/upload/v1714735042/tablet_bg/blue_lagoon.jpg",
+                    "mobile": "https://res.cloudinary.com/dozbtab7q/image/upload/v1714735002/mobile_bg/blue_lagoon.jpg"
+                  },
+                  "owner": "663b3e3e10ef64a469f6cb85",
+                  "_id": "6643bf110c61ca8a628e5389",
+                  "createdAt": "2024-05-14T19:44:17.569Z",
+                  "updatedAt": "2024-05-14T19:44:17.569Z"
                 }
             },
             "BoardsAllResponse": {
@@ -1439,22 +1351,30 @@
                 "type": "object",
                 "properties": {
                     "board_name": {
-                        "type": "string",
-                        "description": "Board"
+                        "type": ["string", "null"],
+                        "description": "Name of the board",
+                        "default": null
                     },
                     "icon": {
-                        "type": "string",
-                        "description": "icon name"
+                        "type": ["string", "null"],
+                        "description": "Icon name",
+                        "default": null
                     },
                     "background": {
-                        "type": "string",
-                        "description": "Background name"
+                        "type": ["string", "null"],
+                        "description": "Background name",
+                        "default": null
+                    },
+                    "image": {
+                        "type": ["string", "null"],
+                        "description": "Image name",
+                        "default": null
                     }
                 },
                 "example": {
                     "board_name": "My project",
                     "icon": "iconId1",
-                    "background": "default"
+                    "background": "blue_lagoon"
                 }
             },
             "ColumnRequest": {
