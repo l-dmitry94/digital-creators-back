@@ -6,7 +6,7 @@ export const updateColumnByFilter = (filter, data) => Column.findOneAndUpdate(fi
 
 export const removeColumnByFilter = filter => Column.findOneAndDelete(filter);
 
-export const removeAllColumnsInBoard = filter => Column.deleteMany(filter);
+export const removeAllColumnsByFilter = filter => Column.deleteMany(filter);
 
 export const getAllColumns = filter => Column.find(filter);
 
@@ -18,5 +18,5 @@ export default {
     removeColumnByFilter,
     getAllColumns,
     getColumnByFilter,
-    removeAllColumnsInBoard,
+    removeAllColumnsByFilter,
 };

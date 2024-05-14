@@ -1,5 +1,6 @@
 import ctrlWrapper from '../decorators/ctrlWrapper.js';
 import HttpError from '../helpers/HttpError.js';
+import cardServices from '../services/cardServices.js';
 import columnServices from '../services/columnServices.js';
 
 export const createColumn = async (req, res) => {
@@ -41,6 +42,7 @@ export const deleteColumnById = async (req, res) => {
     const { _id: owner } = req.user;
     const data = await columnServices.removeColumnByFilter({ owner, _id: id });
     if (!data) throw HttpError(404, 'Not found');
+    await cardServices.removeAllCardsByFilter({ owner, ref_column: id });
     res.status(204).send();
 };
 
@@ -61,13 +63,10 @@ export const getColumnById = async (req, res) => {
     res.json(data);
 };
 
-
-
 export default {
     createColumn: ctrlWrapper(createColumn),
     updateColumn: ctrlWrapper(updateColumn),
     deleteColumnById: ctrlWrapper(deleteColumnById),
     getAllColumns: ctrlWrapper(getAllColumns),
     getColumnById: ctrlWrapper(getColumnById),
-   
 };
