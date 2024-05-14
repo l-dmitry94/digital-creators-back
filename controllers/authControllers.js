@@ -129,7 +129,7 @@ const editProfile = async (req, res) => {
         res.status(201).json(result);
         return;
     }
-    const { url: avatarURL, public_id: avatar_id } = await cloudinary.uploader.upload(req.file.path, {
+    const { secure_url: avatarURL, public_id: avatar_id } = await cloudinary.uploader.upload(req.file.path, {
         folder: 'avatars',
         width: 65,
         height: 65,
