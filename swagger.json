@@ -1033,6 +1033,11 @@
                                 "type": "string",
                                 "description": "User's avatar",
                                 "example": "//www.gravatar.com/avatar/412dcbc34b007af7ab075bfaa26c98f0"
+                            },
+                            "theme": {
+                                "type": "string",
+                                "description": "User's theme",
+                                "example": "dark"
                             }
                         }
                     }
@@ -1042,7 +1047,8 @@
                     "user": {
                         "username": "Ivan",
                         "email": "vegrke@gufum.com",
-                        "avatarURL": "//www.gravatar.com/avatar/412dcbc34b007af7ab075bfaa26c98f0"
+                        "avatarURL": "//www.gravatar.com/avatar/412dcbc34b007af7ab075bfaa26c98f0",
+                        "theme" : "dark"
                     }
                 }
             },
@@ -1308,6 +1314,81 @@
                     }
                 }
             },
+            "UploadBackgroundsResponse": {
+                "type": "object",
+                "properties": {
+                  "resources": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "asset_id": { "type": "string" },
+                        "public_id": { "type": "string" },
+                        "format": { "type": "string" },
+                        "version": { "type": "integer" },
+                        "resource_type": { "type": "string" },
+                        "type": { "type": "string" },
+                        "created_at": { "type": "string", "format": "date-time" },
+                        "bytes": { "type": "integer" },
+                        "width": { "type": "integer" },
+                        "height": { "type": "integer" },
+                        "folder": { "type": "string" },
+                        "url": { "type": "string", "format": "uri" },
+                        "secure_url": { "type": "string", "format": "uri" },
+                        "last_updated": {
+                          "type": "object",
+                          "properties": {
+                            "public_id_updated_at": { "type": "string", "format": "date-time" },
+                            "updated_at": { "type": "string", "format": "date-time" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "resources": [
+                    {
+                      "asset_id": "ccad7972e4e47aaea55746d515491266",
+                      "public_id": "mobile_bg/balloon",
+                      "format": "jpg",
+                      "version": 1714735011,
+                      "resource_type": "image",
+                      "type": "upload",
+                      "created_at": "2024-05-03T11:16:51Z",
+                      "bytes": 42280,
+                      "width": 375,
+                      "height": 812,
+                      "folder": "mobile_bg",
+                      "url": "http://res.cloudinary.com/dozbtab7q/image/upload/v1714735011/mobile_bg/balloon.jpg",
+                      "secure_url": "https://res.cloudinary.com/dozbtab7q/image/upload/v1714735011/mobile_bg/balloon.jpg",
+                      "last_updated": {
+                        "public_id_updated_at": "2024-05-04T06:12:39+00:00",
+                        "updated_at": "2024-05-04T06:12:39+00:00"
+                      }
+                    },
+                    {
+                      "asset_id": "91436591466daf011b85a77bd90e0082",
+                      "public_id": "mobile_bg/Balloons",
+                      "format": "jpg",
+                      "version": 1714734998,
+                      "resource_type": "image",
+                      "type": "upload",
+                      "created_at": "2024-05-03T11:16:38Z",
+                      "bytes": 58726,
+                      "width": 375,
+                      "height": 812,
+                      "folder": "mobile_bg",
+                      "url": "http://res.cloudinary.com/dozbtab7q/image/upload/v1714734998/mobile_bg/Balloons.jpg",
+                      "secure_url": "https://res.cloudinary.com/dozbtab7q/image/upload/v1714734998/mobile_bg/Balloons.jpg",
+                      "last_updated": {
+                        "public_id_updated_at": "2024-05-04T06:14:35+00:00",
+                        "updated_at": "2024-05-04T06:14:35+00:00"
+                      }
+                    }
+                  ]
+                }
+              },
             "BoardUpdateRequest": {
                 "type": "object",
                 "properties": {
