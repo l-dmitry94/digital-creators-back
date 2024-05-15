@@ -21,7 +21,7 @@ const signup = async (req, res) => {
     const avatarURL = gravatar.url(email);
     // const verificationToken = nanoid();
 
-    const newUser = await authServices.signup({ ...req.body, password: hashPassword, avatarURL });
+    const newUser = await authServices.signup({ ...req.body, password: hashPassword, avatarURL, thema: 'dark' });
 
     // const verifyEmail = createVerifyEmail(email, verificationToken);
     // await sendEmail(verifyEmail);
@@ -34,6 +34,7 @@ const signup = async (req, res) => {
         user: {
             username: newUser.username,
             email: newUser.email,
+            thema: newUser.thema,
             avatarURL: newUser.avatarURL,
         },
     });
@@ -90,6 +91,7 @@ const signin = async (req, res) => {
         user: {
             username: user.username,
             email: user.email,
+            thema: user.thema,
             avatarURL: user.avatarURL,
         },
     });
@@ -150,10 +152,11 @@ const editProfile = async (req, res) => {
 };
 
 const getCurrent = async (req, res) => {
-    const { username, email, avatarURL } = req.user;
+    const { username, email, avatarURL, thema } = req.user;
     res.json({
         username,
         email,
+        thema,
         avatarURL,
     });
 };
