@@ -31,6 +31,10 @@ const userSchema = new Schema(
             type: String,
             default: null,
         },
+        thema: {
+            type: String,
+            default: 'dark',
+        }
     },
     { versionKey: false, timestamps: true }
 );
