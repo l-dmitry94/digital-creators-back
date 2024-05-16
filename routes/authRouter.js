@@ -1,6 +1,6 @@
 import express from 'express';
 import authControllers from '../controllers/authControllers.js';
-import { userSignupSchema, userSigninSchema} from '../schemas/usersSchemas.js';
+import { userSignupSchema, userSigninSchema, userUpdateThemaSchema } from '../schemas/usersSchemas.js';
 import validateBody from '../decorators/validateBody.js';
 import authenticate from '../middlewares/authenticate.js';
 import upload from '../middlewares/upload.js';
@@ -16,6 +16,8 @@ authRouter.post('/signup', validateBody(userSignupSchema), authControllers.signu
 authRouter.post('/signin', validateBody(userSigninSchema), authControllers.signin);
 
 authRouter.patch('/editProfile', authenticate, upload.single('avatar'), authControllers.editProfile);
+
+authRouter.patch('/thema', authenticate, validateBody(userUpdateThemaSchema), authControllers.updateThema);
 
 authRouter.get('/current', authenticate, authControllers.getCurrent);
 

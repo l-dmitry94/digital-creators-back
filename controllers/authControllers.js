@@ -202,6 +202,39 @@ const supportSendEmail = async (req, res) => {
     });
 };
 
+export const updateThema = async (req, res) => {
+    const { _id } = req.user;
+    const { thema } = req.body;
+    const data = await authServices.updateUser({ _id }, { thema });
+    if (!data) throw HttpError(404, 'Not found');
+    res.json(data);
+};
+
+// const updateAvatar = async (req, res) => {
+//   if (!req.file) throw HttpError(400, 'An avatar file was not added to your request');
+
+//   const { _id } = req.user;
+//   const { path: tempUpload, originalname } = req.file;
+
+//   try {
+//     const img = await Jimp.read(tempUpload);
+//     await img.resize(250, 250).writeAsync(tempUpload);
+//   } catch (error) {
+//     console.error('Помилка обробки зображення:', error);
+//     throw HttpError(500, 'Internal Server Error');
+//   }
+
+//   const filename = `${_id}_${originalname}`;
+//   const resultUpload = path.join(avatarsDir, filename);
+//   await fs.rename(tempUpload, resultUpload);
+//   const avatarURL = path.join('avatars', filename);
+//   await User.findByIdAndUpdate(_id, { avatarURL });
+
+//   res.json({
+//     avatarURL,
+//   });
+// };
+
 export default {
     signup: ctrlWrapper(signup),
     verify: ctrlWrapper(verify),
@@ -211,4 +244,5 @@ export default {
     getCurrent: ctrlWrapper(getCurrent),
     logout: ctrlWrapper(logout),
     supportSendEmail: ctrlWrapper(supportSendEmail),
+    updateThema: ctrlWrapper(updateThema),
 };
